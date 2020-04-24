@@ -3,13 +3,14 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/controller/build_controller.dart';
-import 'package:gesco/controller/ticket_controller.dart';
+import 'package:gesco/controller/order_controller.dart';
 import 'package:gesco/models/build.dart';
-import 'package:gesco/models/ticket.dart';
+import 'package:gesco/models/order.dart';
 import 'package:gesco/ui/build_tiles.dart';
-import 'package:gesco/ui/ticket_tile.dart';
+import 'package:gesco/ui/order_tile.dart';
 
 import 'app_header.dart';
+import 'common_styles.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -27,7 +28,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     List<Build> buildings = BuildController.getBuilding();
-    List<Ticket> tickects = TicketController.getTickets();
+    List<Order> tickects = List<Order>();
+
+    buildings.forEach( (item) {
+      if(item.orders != null && item.orders.length > 0)
+        tickects.addAll(item.orders);
+    });
 
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
@@ -100,8 +106,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: <Widget>[
                       Text(
                         'Minhas\nConstruções',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.w600),
+                        style: CommonStyles.SectionTextStyle(),
                       ),
                       SizedBox(
                         height: 10.0,
@@ -122,31 +127,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Text(
                         'Últimas\nSolicitações',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.w600),
+                        style: CommonStyles.SectionTextStyle(),
                       ),
                       SizedBox(
                         height: 10.0,
                       ),
-                      /*Container(
-                          height: 350,
-                          child: ListView.builder(
-                            itemCount: tickects.length,
-                            shrinkWrap: true,
-                            physics: ClampingScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (context, index) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: <Widget>[
-                                  TicketTile(
-                                    tileColor: tickects[index].color,
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                      ),*/
                       ListView.builder(
                         itemCount: tickects.length,
                         shrinkWrap: true,
@@ -156,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
-                              TicketTile(ticket: tickects[index])
+                              OrderTile(order: tickects[index], buildPage: true,)
                             ],
                           );
                         },

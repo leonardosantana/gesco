@@ -1,14 +1,19 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/models/item.dart';
+import 'package:gesco/models/order.dart';
 
 import 'app_header.dart';
+import 'common_styles.dart';
 
 class CheckItems extends StatefulWidget {
+  Order order;
+
   List<Item> items;
 
-  List<Item> itemsToCheck;
-
-  CheckItems({this.items});
+  CheckItems({this.order}) {
+    items = this.order.items;
+  }
 
   @override
   _CheckItemsState createState() => _CheckItemsState();
@@ -58,13 +63,14 @@ class _CheckItemsState extends State<CheckItems> {
                     padding: EdgeInsets.all(5),
                     scrollDirection: Axis.vertical,
                     children: <Widget>[
-
-                      if(widget.items.where((item) => item.delivered == null).length > 0)
+                      if (widget.items
+                              .where((item) => item.delivered == null)
+                              .length >
+                          0)
                         Text(
-                        'A checar',
-                        style: TextStyle(
-                            fontSize: 26, fontWeight: FontWeight.w800),
-                      ),
+                          'A checar',
+                          style: CommonStyles.SectionTextStyle(),
+                        ),
                       ListView.builder(
                         itemCount: widget.items
                             .where((item) => item.delivered == null)
@@ -73,6 +79,10 @@ class _CheckItemsState extends State<CheckItems> {
                         physics: ClampingScrollPhysics(),
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
+                          final item = widget.items
+                              .where((item) => item.delivered == null)
+                              .toList()[index];
+
                           return Card(
                             elevation: 5.0,
                             child: Container(
@@ -108,8 +118,7 @@ class _CheckItemsState extends State<CheckItems> {
                       ),
                       Text(
                         'Checados',
-                        style: TextStyle(
-                            fontSize: 26, fontWeight: FontWeight.w800),
+                        style: CommonStyles.SectionTextStyle(),
                       ),
                       ListView.builder(
                         itemCount: widget.items
@@ -119,51 +128,66 @@ class _CheckItemsState extends State<CheckItems> {
                         physics: ClampingScrollPhysics(),
                         scrollDirection: Axis.vertical,
                         itemBuilder: (context, index) {
+                          final item = widget.items
+                              .where((item) => item.delivered != null)
+                              .toList()[index];
+
                           return Card(
                             elevation: 5.0,
-                            child: Container(
-                              color: widget.items
-                                          .where(
-                                              (item) => item.delivered != null)
-                                          .toList()[index]
-                                          .quantity ==
-                                      widget.items
-                                          .where(
-                                              (item) => item.delivered != null)
-                                          .toList()[index]
-                                          .delivered
-                                  ? Colors.green
-                                  : Colors.red,
-                              height: 60.0,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    widget.items
-                                        .where((item) => item.delivered != null)
-                                        .toList()[index]
-                                        .product
-                                        .name,
-                                    style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w800),
-                                  ),
-                                  Text(
-                                      'Pedido: ${widget.items.where((item) => item.delivered != null).toList()[index].quantity} entregue: ${widget.items.where((item) => item.delivered != null).toList()[index].delivered}')
-                                ],
+                            child: Dismissible(
+                              background: Container(color: Colors.red),
+                              key: Key(item.product.name),
+                              onDismissed: (direction) {
+                                // Remove the item from the data source.
+                                setState(() {
+                                  widget.items
+                                      .where((item) => item.delivered != null)
+                                      .toList()[index]
+                                      .delivered = null;
+                                });
+                              },
+                              child: Container(
+                                color: item.quantity == item.delivered
+                                    ? Colors.green
+                                    : Colors.yellow,
+                                height: 60.0,
+                                padding: EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      item.product.name,
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    Text(
+                                        'Pedido: ${item.quantity} entregue: ${item.delivered}')
+                                  ],
+                                ),
                               ),
                             ),
                           );
                         },
                       ),
-                      if(widget.items.where((item) => item.delivered == null).length == 0)
+                      if (widget.items
+                              .where((item) => item.delivered == null)
+                              .length ==
+                          0)
                         Container(
                           margin: EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             color: Colors.red,
                           ),
                           child: FlatButton(
+                            onPressed: () {
+                              setState(() {
+                                widget.order.status = 'entregue';
+                                Navigator.pop(context);
+                              });
+                            },
                             child: Text(
                               'Finalizar Entrega',
                               style: TextStyle(
@@ -184,45 +208,51 @@ class _CheckItemsState extends State<CheckItems> {
 
   AlertDialog buildAlertDialog(GlobalKey<FormState> _formKey, int index) {
     final TextEditingController myController = TextEditingController();
+
     return AlertDialog(
       content: Container(
-          child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextFormField(
-              controller: myController,
-              decoration: const InputDecoration(
-                hintText: 'Quantidade recebida',
-              ),
-              validator: (value) {
-                if (value.isEmpty) {
-                  return 'Entre um valor válido';
-                }
-                return null;
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: RaisedButton(
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    setState(() {
-                      widget.items
-                          .where((item) => item.delivered == null)
-                          .toList()[index]
-                          .delivered = int.parse(myController.text);
-                      Navigator.pop(context, true);
-                    });
+        height: 150.0,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextFormField(
+                keyboardType: TextInputType.number,
+                controller: myController,
+                decoration: const InputDecoration(
+                  hintText: 'Quantidade recebida',
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Entre um valor válido';
                   }
+                  return null;
                 },
-                child: Text('Confirmar'),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: RaisedButton(
+                  color: Colors.blue,
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      setState(() {
+                        widget.items
+                            .where((item) => item.delivered == null)
+                            .toList()[index]
+                            .delivered = int.parse(myController.text);
+                        Navigator.pop(context, true);
+                      });
+                    }
+                  },
+                  child: Text('Confirmar'),
+                ),
+              ),
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gesco/models/category.dart';
 
 class Product {
   String name;
-  String category;
 
-  Product({@required this.name, @required this.category});
+  Product({@required this.name});
 }

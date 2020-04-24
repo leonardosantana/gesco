@@ -2,23 +2,26 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gesco/controller/ticket_controller.dart';
-import 'package:gesco/models/ticket.dart';
+import 'package:gesco/controller/order_controller.dart';
+import 'package:gesco/controller/user_controller.dart';
+import 'package:gesco/models/order.dart';
 
-import 'detailed_ticket.dart';
+import 'detailed_order.dart';
 
-class TicketTile extends StatefulWidget {
+class OrderTile extends StatefulWidget {
 
-  Ticket ticket;
+  Order order;
 
-  TicketTile(
-      {@required this.ticket});
+  bool buildPage;
+
+  OrderTile(
+      {@required this.order, @required this.buildPage});
 
   @override
-  _TicketTileState createState() => _TicketTileState();
+  _OrderTileState createState() => _OrderTileState();
 }
 
-class _TicketTileState extends State<TicketTile> {
+class _OrderTileState extends State<OrderTile> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -26,7 +29,7 @@ class _TicketTileState extends State<TicketTile> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DetailedTicket(ticket: widget.ticket)));
+                builder: (context) => DetailedOrder(order: widget.order,user: UserController.user)));
       },
       child: Card(
         elevation: 5.0,
@@ -57,7 +60,7 @@ class _TicketTileState extends State<TicketTile> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            widget.ticket.buildName,
+                            widget.buildPage ? '${widget.order.buildName} ordem nº${widget.order.id}' :'ordem nº${widget.order.id}',
                             style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.black,
@@ -65,13 +68,13 @@ class _TicketTileState extends State<TicketTile> {
                           ),
                           Container(
                               decoration: BoxDecoration(
-                                color: TicketController.getColorFromStatus(widget.ticket.status),
+                                color: OrderController.getColorFromStatus(widget.order.status),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 2.0, horizontal: 5),
-                                child: Text(widget.ticket.status),
+                                child: Text(widget.order.status),
                               )),
                         ],
                       ),
@@ -83,8 +86,7 @@ class _TicketTileState extends State<TicketTile> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      Text('Itens: ${widget.ticket.quantity}'),
-                      //Text('R\$: ${widget.ticket.cust}'),
+                      Text('Itens: ${widget.order.items.length}'),
                     ],
                   ),
                 )

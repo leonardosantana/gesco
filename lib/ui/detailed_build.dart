@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gesco/controller/ticket_controller.dart';
+import 'package:gesco/controller/order_controller.dart';
 import 'package:gesco/models/build.dart';
-import 'package:gesco/models/ticket.dart';
-import 'package:gesco/ui/ticket_tile.dart';
+import 'package:gesco/models/order.dart';
+import 'package:gesco/ui/order_tile.dart';
 
 import 'app_header.dart';
+import 'common_styles.dart';
+import 'new_order.dart';
 
 class DetailedBuild extends StatefulWidget {
   Build build;
   bool isSelected = true;
-
-  List<Ticket> tickects = TicketController.getTickets();
 
   DetailedBuild({@required this.build});
 
@@ -108,6 +108,13 @@ class _DetailedBuildState extends State<DetailedBuild> {
                           color: Colors.blueAccent,
                         ),
                         child: FlatButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewOrder(build: widget.build)));
+                          },
                           child: Text(
                             'Nova solicitação',
                             style: TextStyle(
@@ -122,33 +129,13 @@ class _DetailedBuildState extends State<DetailedBuild> {
                       ),
                       Text(
                         'Últimas\nSolicitações',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.w600),
+                        style: CommonStyles.SectionTextStyle(),
                       ),
                       SizedBox(
                         height: 10.0,
                       ),
-                      /*Container(
-                          height: 350,
-                          child: ListView.builder(
-                            itemCount: tickects.length,
-                            shrinkWrap: true,
-                            physics: ClampingScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (context, index) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: <Widget>[
-                                  TicketTile(
-                                    tileColor: tickects[index].color,
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                      ),*/
                       ListView.builder(
-                        itemCount: widget.tickects.length,
+                        itemCount: widget.build.orders.length,
                         shrinkWrap: true,
                         physics: ClampingScrollPhysics(),
                         scrollDirection: Axis.vertical,
@@ -156,7 +143,7 @@ class _DetailedBuildState extends State<DetailedBuild> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
-                              TicketTile(ticket: widget.tickects[index])
+                              OrderTile(order: widget.build.orders[index], buildPage: false,)
                             ],
                           );
                         },
@@ -170,3 +157,4 @@ class _DetailedBuildState extends State<DetailedBuild> {
     );
   }
 }
+

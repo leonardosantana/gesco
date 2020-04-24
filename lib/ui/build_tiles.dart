@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/models/build.dart';
+import 'package:gesco/ui/common_styles.dart';
 
 import 'detailed_build.dart';
 
 class BuildTile extends StatefulWidget {
-
   Build build;
 
   BuildTile({@required this.build});
@@ -18,29 +18,28 @@ class _BuildTileState extends State<BuildTile> {
   @override
   Widget build(BuildContext context) {
     return Card(
-        color: Colors.white,
-        elevation: 5.0,
-        child: Container(
-          width: 140.0,
-          color: widget.build.color.withOpacity(0.5),
-          child: InkWell(
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => DetailedBuild(build: widget.build)));
-            },
-            child: Column(
+      color: Colors.white,
+      elevation: 5.0,
+      child: Container(
+        width: 140.0,
+        color: widget.build.color.withOpacity(0.5),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DetailedBuild(build: widget.build)));
+          },
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
-
             children: <Widget>[
               Container(
                   height: 120,
                   color: Colors.white,
                   child: Image(
                       fit: BoxFit.fill,
-                      image: NetworkImage(widget.build.buildImage)
-                  )
-              ),
+                      image: NetworkImage(widget.build.buildImage))),
               Container(
                 padding: EdgeInsets.all(10.0),
                 child: Column(
@@ -49,30 +48,18 @@ class _BuildTileState extends State<BuildTile> {
                   children: <Widget>[
                     Text(
                       widget.build.name,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 18.0,
-                      ),
+                      style: CommonStyles.TileTextStyle(size: 18.0),
                     ),
-                    Text(widget.build.cust.toString(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14.0,
-                        )),
-                    Text(widget.build.progress.toString(),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14.0,
-                        )),
+                    Text(
+                      widget.build.cust.toString(),
+                      style: CommonStyles.TileTextStyle(),
+                    ),
+                    Text(
+                      widget.build.progress.toString(),
+                      style: CommonStyles.TileTextStyle(),
+                    ),
                     Text(widget.build.phase,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 14.0,
-                        )),
+                        style: CommonStyles.TileTextStyle()),
                   ],
                 ),
               ),
@@ -128,4 +115,3 @@ class _BuildTileState extends State<BuildTile> {
     );*/
   }
 }
-
