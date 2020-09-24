@@ -46,7 +46,7 @@ class BuildController {
     List<User> engineers = [UserController.findUserByLogin(engineer)];
     List<User> constructors = [UserController.findUserByLogin(engineer)];
 
-    Build newBuild = Build(
+    /*Build newBuild = Build(
         name: name,
         buildImage:'https://cdn11.bigcommerce.com/s-67d81/images/stencil/2048x2048/products/2356/5606/57146_3__96383.1500463213.jpg',
         cust: 0.0,
@@ -58,6 +58,6 @@ class BuildController {
         buyer: constructors,
         orders: List<Order>());
 
-    _buildings.add(newBuild);
+    _buildings.add(newBuild);*/
   }
 }

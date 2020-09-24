@@ -1,6 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gesco/app/build/build_repository.dart';
 import 'package:gesco/utils/common_validator.dart';
 
 class NewBuildBloc extends BlocBase {
@@ -10,13 +11,15 @@ class NewBuildBloc extends BlocBase {
     super.dispose();
   }
 
-  Future<FirebaseUser> _user;
+  Future<User> _user;
 
   NewBuildBloc(){
     _user = initUser();
   }
 
-  Future <FirebaseUser> initUser() async {
+  BuildRepository _repository = new BuildRepository();
+
+  Future <User> initUser() async {
     return await FirebaseAuth.instance.currentUser;
   }
 

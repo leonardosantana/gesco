@@ -1,31 +1,56 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/models/user.dart';
+import 'package:gesco/shared/base_model.dart';
 
-class Build {
+class Build extends BaseModel{
+
+  String _documentId;
+
   String name;
-  double cust;
-  double progress;
-  String phase;
-  String buildImage;
+  String builder;
+  String engineer;
+  String address;
+  String zipCode;
+  double buildSize;
   Color color;
-  User constructor;
-  User owner;
-  List<User> buyer;
-  List<User> engineer;
+  double progress;
+  double cust;
+  String phase;
   List<Order> orders;
+  String buildImage;
 
-  Build(
-      {@required this.name,
-        @required this.cust,
-        @required this.progress,
-        @required this.phase,
-        @required this.buildImage,
-        @required this.color,
-        @required this.owner,
-        @required this.buyer,
-        @required this.engineer,
-        @required this.constructor,
-        this.orders
-      });
+  Build();
+
+  @override
+  String documentId() => _documentId;
+
+  Build.fromMap(DocumentSnapshot document){
+    _documentId = document.id;
+
+    this.name = document.data()["name"];
+    this.builder = document.data()["builder"];
+    this.engineer = document.data()["engineer"];
+    this.address = document.data()["address"];
+    this.zipCode = document.data()["zipCode"];
+    this.buildSize = document.data()["buildSize"];
+
+    }
+
+  @override
+  toMap() {
+
+    var map = new Map<String, dynamic>();
+
+    map['name'] = this.name;
+    map['builder'] = this.builder;
+    map['engineer'] = this.engineer;
+    map['address'] = this.address;
+    map['zipCode'] = this.zipCode;
+    map['buildSize'] = this.buildSize;
+
+    return map;
+
+  }
 }

@@ -1,10 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:dio/dio.dart';
+
 
 import 'package:gesco/app/build/build_repository.dart';
 
-class MockClient extends Mock implements Dio {}
+class MockClient  {}
 
 void main() {
   BuildRepository repository;
