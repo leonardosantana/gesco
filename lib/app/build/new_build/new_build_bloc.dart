@@ -1,7 +1,10 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gesco/app/build/build_repository.dart';
+import 'package:gesco/models/build.dart';
+import 'package:gesco/models/order.dart';
 import 'package:gesco/utils/common_validator.dart';
 
 class NewBuildBloc extends BlocBase {
@@ -11,7 +14,7 @@ class NewBuildBloc extends BlocBase {
     super.dispose();
   }
 
-  Future<User> _user;
+  User _user;
 
   NewBuildBloc(){
     _user = initUser();
@@ -19,8 +22,8 @@ class NewBuildBloc extends BlocBase {
 
   BuildRepository _repository = new BuildRepository();
 
-  Future <User> initUser() async {
-    return await FirebaseAuth.instance.currentUser;
+  User initUser() {
+    return FirebaseAuth.instance.currentUser;
   }
 
   bool formValidate(GlobalKey<FormState> formKey) {
@@ -59,7 +62,20 @@ class NewBuildBloc extends BlocBase {
   }
 
   saveBuild(String name, String address, double buildSize, String zipCode, String builder, String engineer, bool engineerSwitch) {
+    Build newBuild = Build();
 
+    newBuild.name = name;
+    newBuild.address = address;
+    newBuild.buildSize = buildSize;
+    newBuild.zipCode = zipCode;
+    newBuild.builder = builder;
+    newBuild.engineer = engineer;
+    newBuild.buildImage = 'https://www.conjur.com.br/img/b/pedreiro-ajudante-obra.png';
+    newBuild.color = Colors.red;
+    newBuild.owner = _user.email;
+    newBuild.orders= List<Order>();
+
+    _repository.add(newBuild);
   }
 
 }

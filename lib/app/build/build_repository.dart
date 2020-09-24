@@ -5,9 +5,16 @@ import 'package:rxdart/rxdart.dart';
 
 class BuildRepository extends Disposable {
 
-  CollectionReference _collection = FirebaseFirestore.instance.collection('build');
+  CollectionReference _collection = FirebaseFirestore.instance.collection(
+      'build');
 
-  void add(Build build) => _collection.add(build.toMap());
+  Future add(Build build) {
+    _collection.add(build.toMap()).then((value) {
+      print("User Added");
+    }).catchError((error) {
+      print("Failed to add user: $error");
+    });
+  }
 
   void update(String documentId, Build build) =>
       _collection.doc(documentId).update(build.toMap());
@@ -15,9 +22,10 @@ class BuildRepository extends Disposable {
   void delete(String documentId) => _collection.doc(documentId).delete();
 
   Stream<List<Build>> get builds =>
-      _collection.snapshots().map((query) => query.docs
-          .map<Build>((document) => Build.fromMap(document))
-          .toList()).asBroadcastStream();
+      _collection.snapshots().map((query) =>
+          query.docs
+              .map<Build>((document) => Build.fromMap(document))
+              .toList()).asBroadcastStream();
 
   @override
   void dispose() {}
