@@ -17,7 +17,7 @@ class _NewBuildPageState extends State<NewBuildPage> {
   String _address;
   String _zipCode;
   double _buildSize;
-  bool _engineerSwitch;
+  bool _engineerSwitch = false;
 
   NewBuildBloc bloc = new NewBuildBloc();
 
