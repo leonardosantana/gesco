@@ -61,7 +61,7 @@ class NewBuildBloc extends BlocBase {
     return null;
   }
 
-  saveBuild(String name, String address, double buildSize, String zipCode, String builder, String engineer, bool engineerSwitch) {
+  saveBuild(String name, String address, double buildSize, String zipCode, String builder, String engineer, bool engineerSwitch, BuildContext context) {
     Build newBuild = Build();
 
     newBuild.name = name;
@@ -76,6 +76,8 @@ class NewBuildBloc extends BlocBase {
     newBuild.orders= List<Order>();
 
     _repository.add(newBuild);
+
+    Navigator.pop(context);
   }
 
 }

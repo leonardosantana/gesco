@@ -26,13 +26,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<Build> buildings = BuildController.getBuilding();
+    Future<List<Build>> buildings = new BuildController().getBuilding();
     List<Order> tickects = List<Order>();
 
-    buildings.forEach((item) {
+    /*buildings.forEach((item) {
       if (item.orders != null && item.orders.length > 0)
         tickects.addAll(item.orders);
-    });
+    });*/
 
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
@@ -115,17 +115,24 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             Container(
                                 height: 220,
-                                child: ListView.builder(
-                                  itemCount: buildings.length + 1,
-                                  shrinkWrap: true,
-                                  physics: ClampingScrollPhysics(),
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (context, index) {
-                                    return BuildTile(
-                                        build: index == buildings.length
-                                            ? null
-                                            : buildings[index]);
+                                child: FutureBuilder(
+                                  builder: (context, builderSnap){
+                                    if(builderSnap.connectionState == ConnectionState.none && builderSnap.hasData == null)
+                                      return BuildTile(build: null);
+                                    return ListView.builder(
+                                      itemCount: builderSnap.data.length + 1,
+                                      shrinkWrap: true,
+                                      physics: ClampingScrollPhysics(),
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        return BuildTile(
+                                            build: index == builderSnap.data.length
+                                                ? null
+                                                : builderSnap.data[index]);
+                                      },
+                                    );
                                   },
+                                  future: buildings,
                                 )),
                             SizedBox(
                               height: 20.0,

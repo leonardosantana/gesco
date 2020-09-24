@@ -150,7 +150,7 @@ class _BuildTileState extends State<BuildTile> {
                 widget.build.progress.toString(),
                 style: CommonStyles.TileTextStyle(),
               ),
-              Text(widget.build.phase, style: CommonStyles.TileTextStyle()),
+              Text(widget.build.phase==null?'':widget.build.phase, style: CommonStyles.TileTextStyle()),
             ],
           ),
         ),

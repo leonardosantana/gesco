@@ -92,7 +92,7 @@ class _DetailedBuildState extends State<DetailedBuild> {
                                         ),
                                         Text(widget.build.cust.toString()),
                                         Text(widget.build.progress.toString()),
-                                        Text(widget.build.phase),
+                                        Text(widget.build.phase==null?'':widget.build.phase),
                                       ],
                                     ),
                                   ],
@@ -135,7 +135,7 @@ class _DetailedBuildState extends State<DetailedBuild> {
                         height: 10.0,
                       ),
                       ListView.builder(
-                        itemCount: widget.build.orders.length,
+                        itemCount: widget.build.orders==null?0: widget.build.orders.length,
                         shrinkWrap: true,
                         physics: ClampingScrollPhysics(),
                         scrollDirection: Axis.vertical,

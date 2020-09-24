@@ -1,9 +1,13 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gesco/models/build.dart';
 import 'package:rxdart/rxdart.dart';
 
 class BuildRepository extends Disposable {
+
+  User _user = FirebaseAuth.instance.currentUser;
+
 
   CollectionReference _collection = FirebaseFirestore.instance.collection(
       'build');
@@ -22,10 +26,10 @@ class BuildRepository extends Disposable {
   void delete(String documentId) => _collection.doc(documentId).delete();
 
   Stream<List<Build>> get builds =>
-      _collection.snapshots().map((query) =>
-          query.docs
-              .map<Build>((document) => Build.fromMap(document))
-              .toList()).asBroadcastStream();
+      _collection.where('owner', isEqualTo: _user.email)
+          .snapshots().map((query) => query.docs
+          .map<Build>((document) => Build.fromMap(document))
+          .toList());
 
   @override
   void dispose() {}
