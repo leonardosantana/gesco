@@ -20,4 +20,8 @@ class UserController{
 
   static User user = userOwner;
 
+  static User findUserByLogin(String userName) {
+    return User(id: Random().nextInt(1<<16), login: userName );
+  }
+
 }

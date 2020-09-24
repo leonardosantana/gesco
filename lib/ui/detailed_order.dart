@@ -168,23 +168,58 @@ class _DetailedOrderState extends State<DetailedOrder> {
         return getButtonNewOrderFromAbsents();
       case 'aberta':
         return getButtonAddItensOrFinalize();
+      case 'aguardando compra':
+        return getButtonToCheckBuyedItems();
     }
     return Text('-');
   }
 
-  Container getButtonModifyOrder() {
-    return Container(
-      margin: EdgeInsets.all(5),
-      decoration: BoxDecoration(
-        color: Colors.blueAccent,
-      ),
-      child: FlatButton(
-        child: Text(
-          'Modificar pedido',
-          style: TextStyle(
-              fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold),
+  Widget getButtonModifyOrder() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            color: Colors.blueAccent,
+          ),
+          child: FlatButton(
+            onPressed: () {
+              setState(() {
+                widget.order.status = 'aberta';
+                widget.order.modified = true;
+              });
+            },
+            child: Text(
+              'Modificar pedido',
+              style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
         ),
-      ),
+        Container(
+          margin: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            color: Colors.blueAccent,
+          ),
+          child: FlatButton(
+            onPressed: () {
+              setState(() {
+                widget.order.status = 'aguardando compra';
+              });
+            },
+            child: Text(
+              'Aprovar pedido',
+              style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -283,14 +318,13 @@ class _DetailedOrderState extends State<DetailedOrder> {
                   color: Colors.blueAccent,
                 ),
                 child: FlatButton(
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.pop(context);
                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder:
-                          (context) => NewOrder(
-                            build: widget.build,
-                            order: widget.order)));
+                        MaterialPageRoute(
+                            builder: (context) => NewOrder(
+                                build: widget.build, order: widget.order)));
                   },
                   child: Text(
                     'Adicionar Item',
@@ -314,10 +348,13 @@ class _DetailedOrderState extends State<DetailedOrder> {
                   color: Colors.blueAccent,
                 ),
                 child: FlatButton(
-                  onPressed: (){
+                  onPressed: () {
                     setState(() {
                       widget.order.status = 'aprovação pendente';
-                      widget.build.orders.add(widget.order);
+                      widget.order.modified
+                          ? widget.order.modified = false
+                          : widget.build.orders.add(widget.order);
+
                       Navigator.pop(context);
                     });
                   },
@@ -334,6 +371,27 @@ class _DetailedOrderState extends State<DetailedOrder> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget getButtonToCheckBuyedItems() {
+    return Container(
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Colors.blueAccent,
+      ),
+      child: FlatButton(
+        onPressed: () {
+          setState(() {
+            widget.order.status = 'aguardando entrega';
+          });
+        },
+        child: Text(
+          'Itens Comprados',
+          style: TextStyle(
+              fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
     );
   }
 }

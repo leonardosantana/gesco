@@ -10,6 +10,7 @@ class Order {
   String status;
   int quantity;
   double cust;
+  bool modified;
   List<Item> items;
 
   Order(
@@ -20,5 +21,7 @@ class Order {
       @required this.status,
       @required this.quantity,
       @required this.cust,
-      @required this.items});
+      @required this.items}){
+    this.modified = false;
+  }
 }

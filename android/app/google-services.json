@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "700598192545",
+    "firebase_url": "https://materiais-6daf3.firebaseio.com",
+    "project_id": "materiais-6daf3",
+    "storage_bucket": "materiais-6daf3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700598192545:android:49ff93c08c55c151c063e0",
+        "android_client_info": {
+          "package_name": "com.br.leonardo.buildingmaterialsorder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700598192545-lu4kmttqdigloamlou6otl5c7k2duct6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB19PGlrwPOppcQcaup3blWuqbMhbhPDss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700598192545-lu4kmttqdigloamlou6otl5c7k2duct6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:700598192545:android:9498511a556ab339c063e0",
+        "android_client_info": {
+          "package_name": "com.example.gesco"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "700598192545-lu4kmttqdigloamlou6otl5c7k2duct6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB19PGlrwPOppcQcaup3blWuqbMhbhPDss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "700598192545-lu4kmttqdigloamlou6otl5c7k2duct6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
