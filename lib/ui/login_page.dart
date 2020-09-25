@@ -137,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
   void signIn() {
 
     if(bloc.formValidate(_formKey, true)){
-      bloc.signIn(context, _formKey, _password, _login);
+      bloc.signIn(context, _formKey, _password, _login, this._scaffoldKey);
     }
 
   }

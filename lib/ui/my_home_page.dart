@@ -3,9 +3,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/controller/build_controller.dart';
-import 'package:gesco/models/build.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_model.dart';
 import 'package:gesco/models/order.dart';
-import 'package:gesco/ui/build_tiles.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_tile_page.dart';
 import 'package:gesco/ui/order_tile.dart';
 
 import 'app_header.dart';

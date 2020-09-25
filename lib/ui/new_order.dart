@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/controller/product_controller.dart';
 import 'package:gesco/controller/user_controller.dart';
-import 'package:gesco/models/build.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_model.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/models/product.dart';

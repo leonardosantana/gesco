@@ -24,19 +24,19 @@ class LoginBloc {
     return null;
   }
 
-  signIn( BuildContext context,  GlobalKey<FormState> form, String password, String login) async {
+   signIn( BuildContext context,  GlobalKey<FormState> form, String password, String login, GlobalKey<ScaffoldState> scaffoldKey) async {
 
       try {
 
-        /*FirebaseUser user = (await FirebaseAuth.instance
+        User user = (await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: login, password: password)).user;
-        print(user.email);*/
+        print(user.email);
 
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage(/*user: user*/)));
-
       }
       catch (e) {
         print(e.message);
+        scaffoldKey.currentState.showSnackBar(SnackBar(content: new Text('Usuário ou senha invalidos')));
 
       }
 

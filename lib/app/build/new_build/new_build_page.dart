@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gesco/app/build/new_build/new_build_bloc.dart';
 import 'package:gesco/ui/app_header.dart';
+import 'package:gesco/utils/common_validator.dart';
 
 class NewBuildPage extends StatefulWidget {
   final String title;
@@ -16,6 +17,7 @@ class _NewBuildPageState extends State<NewBuildPage> {
   String _engineer;
   String _address;
   String _zipCode;
+  String _phase;
   double _buildSize;
   bool _engineerSwitch = false;
 
@@ -60,6 +62,7 @@ class _NewBuildPageState extends State<NewBuildPage> {
                     sizeField(),
                     builderField(),
                     engineerField(),
+                    phaseField(),
                     engineerSwitch(isSwitched),
                     buildSizedBox(),
                     buildFlatButton(),
@@ -89,7 +92,7 @@ class _NewBuildPageState extends State<NewBuildPage> {
 
   saveBuild(){
     if(bloc.formValidate(_formKey)){
-      bloc.saveBuild(_name, _address, _buildSize, _zipCode, _builder, _engineer, _engineerSwitch, context);
+      bloc.saveBuild(_name, _address, _buildSize, _zipCode, _builder, _engineer, _engineerSwitch, _phase, context);
     }
 
   }
@@ -122,6 +125,18 @@ class _NewBuildPageState extends State<NewBuildPage> {
       ),
       onSaved: (value) => _engineer = bloc.getUserId(value),
       validator: (value) => bloc.validateUser(value, "usuario informado não é valido"),
+    );
+  }
+
+  TextFormField phaseField() {
+    return TextFormField(
+      decoration: const InputDecoration(
+        icon: Icon(Icons.timeline),
+        hintText: 'Insira em que etapa a obra esta',
+        labelText: 'Etapa',
+      ),
+      onSaved: (value) => _phase = bloc.getUserId(value),
+      validator: (value) => CommonValidator.validateEmptyString(value) ? "etapa é necessario": null,
     );
   }
 

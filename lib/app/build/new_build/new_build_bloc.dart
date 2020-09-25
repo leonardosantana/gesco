@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gesco/app/build/build_repository.dart';
-import 'package:gesco/models/build.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_model.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/utils/common_validator.dart';
 
@@ -61,7 +61,7 @@ class NewBuildBloc extends BlocBase {
     return null;
   }
 
-  saveBuild(String name, String address, double buildSize, String zipCode, String builder, String engineer, bool engineerSwitch, BuildContext context) {
+  saveBuild(String name, String address, double buildSize, String zipCode, String builder, String engineer, bool engineerSwitch, String phase, BuildContext context) {
     Build newBuild = Build();
 
     newBuild.name = name;
@@ -72,7 +72,11 @@ class NewBuildBloc extends BlocBase {
     newBuild.engineer = engineer;
     newBuild.buildImage = 'https://www.conjur.com.br/img/b/pedreiro-ajudante-obra.png';
     newBuild.color = Colors.red;
+    newBuild.cust = 0.0;
+    newBuild.progress = 0.0;
     newBuild.owner = _user.email;
+    newBuild.phase = phase;
+    newBuild.orderNeedsAproval = engineerSwitch;
     newBuild.orders= List<Order>();
 
     _repository.add(newBuild);

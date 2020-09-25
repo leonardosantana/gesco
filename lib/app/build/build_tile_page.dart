@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/app/build/new_build/new_build_page.dart';
-import 'package:gesco/models/build.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_model.dart';
 import 'package:gesco/ui/common_styles.dart';
 import 'package:gesco/ui/menu_page.dart';
 
-import 'detailed_build.dart';
+import '../../ui/detailed_build.dart';
 
 class BuildTile extends StatefulWidget {
   Build build;

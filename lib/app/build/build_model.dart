@@ -19,6 +19,7 @@ class Build extends BaseModel{
   double progress;
   double cust;
   String phase;
+  bool orderNeedsAproval;
   List<Order> orders;
   String buildImage;
 
@@ -41,6 +42,7 @@ class Build extends BaseModel{
     this.cust = document.data()["cust"];
     this.progress = document.data()["progress"];
     this.phase = document.data()["phase"];
+    this.orderNeedsAproval = document.data()["orderNeedsAproval"];
     this.color = Colors.red;//document.data()["color"];
 
     }
@@ -61,7 +63,7 @@ class Build extends BaseModel{
     map['cust'] = this.cust;
     map['progress'] = this.progress;
     map['phase'] = this.phase;
-    //map['color'] = this.color;
+    map['orderNeedsAproval'] = this.orderNeedsAproval;
 
     return map;
 
