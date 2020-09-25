@@ -1,7 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gesco/models/build.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_model.dart';
 import 'package:rxdart/rxdart.dart';
 
 class BuildRepository extends Disposable {
