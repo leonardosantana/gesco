@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gesco/ui/application_page.dart';
 import 'package:gesco/ui/my_home_page.dart';
 
 class LoginBloc {
@@ -32,7 +33,7 @@ class LoginBloc {
             .signInWithEmailAndPassword(email: login, password: password)).user;
         print(user.email);
 
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MyHomePage(/*user: user*/)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ApplicationPage()));
       }
       catch (e) {
         print(e.message);

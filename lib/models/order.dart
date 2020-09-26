@@ -24,4 +24,5 @@ class Order {
       @required this.items}){
     this.modified = false;
   }
+
 }

@@ -1,9 +1,8 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gesco/app/build/build_model.dart';
 import 'package:gesco/app/build/build_repository.dart';
-import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_model.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/utils/common_validator.dart';
 

@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gesco/app/build/build_model.dart';
+import 'package:gesco/app/order/new_order/new_order_page.dart';
 import 'package:gesco/controller/order_controller.dart';
-import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_model.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/ui/order_tile.dart';
 
@@ -113,7 +114,7 @@ class _DetailedBuildState extends State<DetailedBuild> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        NewOrder(build: widget.build)));
+                                        NewOrderPage(build: widget.build)));
                           },
                           child: Text(
                             'Nova solicitação',

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gesco/app/build/build_model.dart';
 import 'package:gesco/app/build/new_build/new_build_page.dart';
-import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_model.dart';
 import 'package:gesco/ui/common_styles.dart';
 import 'package:gesco/ui/menu_page.dart';
 
