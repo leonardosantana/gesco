@@ -16,20 +16,19 @@ class NewOrder extends StatefulWidget {
 
   Order order;
 
-  List<Product> products = ProductController.getProducts();
+  List<Product> products = null;//ProductController.getProducts();
 
-  List<Product> filteredList = ProductController.getProducts();
+  List<Product> filteredList = null;//ProductController.getProducts();
 
   NewOrder({@required this.build, this.order}){
     if(this.order == null) {
       order = Order(
-          buildName: build.name,
           quantity: 0,
           color: Colors.blue,
           category: '',
           status: 'aberta',
           cust: 0,
-          id: build.orders.length + 1,
+          //id: build.orders.length + 1,
           items: List<Item>());
     }
   }
@@ -92,10 +91,10 @@ class _NewOrderState extends State<NewOrder> {
                             child: TextField(
                               onChanged: (text) {
                                 setState(() {
-                                  widget.filteredList = ProductController
+                                  widget.filteredList = null;/*ProductController
                                           .getProducts()
                                       .where((item) => item.name.contains(text))
-                                      .toList();
+                                      .toList();*/
                                 });
                               },
                             ),

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/app/build/build_model.dart';
+import 'package:gesco/app/build/new_build/new_build_bloc.dart';
 import 'package:gesco/controller/order_controller.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/models/user.dart';
@@ -80,7 +81,7 @@ class _DetailedOrderState extends State<DetailedOrder> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        'Ordem Nº ${widget.order.id}',
+                                        'Ordem Nº',
                                         style: TextStyle(
                                             fontSize: 24.0,
                                             fontWeight: FontWeight.w600),
@@ -353,7 +354,7 @@ class _DetailedOrderState extends State<DetailedOrder> {
                       widget.order.status = 'aprovação pendente';
                       widget.order.modified
                           ? widget.order.modified = false
-                          : widget.build.orders.add(widget.order);
+                          : addOrderInBuild(widget.build, widget.order);
 
                       Navigator.pop(context);
                     });
@@ -372,6 +373,19 @@ class _DetailedOrderState extends State<DetailedOrder> {
         ),
       ],
     );
+  }
+
+  void addOrderInBuild(Build build, Order order) {
+
+    NewBuildBloc _bloc = new NewBuildBloc();
+
+    if(build.orders == null){
+      build.orders = new List<Order>();
+    }
+
+    build.orders.add(order);
+
+    _bloc.addOrder(build.documentId(), order);
   }
 
   Widget getButtonToCheckBuyedItems() {

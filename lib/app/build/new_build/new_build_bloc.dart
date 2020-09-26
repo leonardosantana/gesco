@@ -76,11 +76,16 @@ class NewBuildBloc extends BlocBase {
     newBuild.owner = _user.email;
     newBuild.phase = phase;
     newBuild.orderNeedsAproval = engineerSwitch;
-    newBuild.orders= List<Order>();
+    newBuild.orders= new List<Order>();
 
     _repository.add(newBuild);
 
     Navigator.pop(context);
+  }
+
+  void addOrder(String documentId, Order order) {
+
+    _repository.addOrder(documentId, order);
   }
 
 }

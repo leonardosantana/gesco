@@ -42,39 +42,31 @@ class OrderController {
 
   static List<Order> _orders = [
     Order(
-        id: 1,
         color: Colors.blueAccent,
         category: 'hydraulic',
         cust: 10000.00,
         quantity: 10,
-        buildName: 'Obra 1',
         status: 'aprovação pendente',
         items: _itens),
     Order(
-        id: 1,
         color: Colors.blueAccent,
         category: 'eletric',
         cust: 10000.00,
         quantity: 11,
-        buildName: 'Obra 1',
         status: 'aguardando compra',
         items: _itens),
     Order(
-        id: 1,
         color: Colors.blueAccent,
         category: 'hydraulic',
         cust: 10000.00,
         quantity: 20,
-        buildName: 'Obra 1',
         status: 'aguardando entrega',
         items: _itens),
     Order(
-        id: 1,
         color: Colors.blueAccent,
         category: 'hydraulic',
         cust: 10000.00,
         quantity: 78,
-        buildName: 'Obra 1',
         status: 'entregue',
         items: _itensDelivered),
   ];

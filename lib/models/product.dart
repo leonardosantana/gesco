@@ -4,16 +4,17 @@ import 'package:gesco/models/category.dart';
 
 class Product {
 
-  String _documentId;
+  String documentId;
   String name;
 
 
   Product({@required this.name});
 
   Product.fromMap(DocumentSnapshot document){
-    _documentId = document.id;
-
-
+    documentId = document.id;
+    name = document.data()['name'];
 
   }
+
+
 }

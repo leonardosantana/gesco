@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/models/order.dart';
-import 'package:gesco/models/user.dart';
 import 'package:gesco/shared/base_model.dart';
 
 class Build extends BaseModel{
@@ -28,7 +27,7 @@ class Build extends BaseModel{
   @override
   String documentId() => _documentId;
 
-  Build.fromMap(DocumentSnapshot document){
+  Build.fromMap(DocumentSnapshot document) {
     _documentId = document.id;
 
     this.owner = document.data()["owner"];
@@ -43,9 +42,8 @@ class Build extends BaseModel{
     this.progress = document.data()["progress"];
     this.phase = document.data()["phase"];
     this.orderNeedsAproval = document.data()["orderNeedsAproval"];
-    this.color = Colors.red;//document.data()["color"];
-
-    }
+    this.color = Colors.red; //document.data()["color"];
+  }
 
   @override
   toMap() {
@@ -64,6 +62,7 @@ class Build extends BaseModel{
     map['progress'] = this.progress;
     map['phase'] = this.phase;
     map['orderNeedsAproval'] = this.orderNeedsAproval;
+    map['orders'] = this.orders;
 
     return map;
 
