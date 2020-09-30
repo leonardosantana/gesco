@@ -6,6 +6,7 @@ import 'product.dart';
 class Item {
   String _documentId;
 
+  String productId;
   Product product;
   int quantity;
   int delivered;
@@ -17,7 +18,7 @@ class Item {
 
     var map = new Map<String, dynamic>();
 
-    map['product'] = this.product.documentId;
+    map['productId'] = this.product.documentId;
     map['quantity'] = this.quantity;
     map['delivered'] = this.delivered;
     map['price'] = this.price;
@@ -29,12 +30,14 @@ class Item {
   Item.fromMap(DocumentSnapshot document) {
     _documentId = document.id;
 
-    //this.product = document.data()["product"];
+    this.productId = document.data()["product"];
     this.quantity = document.data()["quantity"];
     this.delivered = document.data()["delivered"];
     this.price = document.data()["price"];
 
   }
+
+  getId() => _documentId;
 
 }
 

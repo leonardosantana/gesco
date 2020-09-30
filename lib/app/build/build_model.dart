@@ -27,6 +27,7 @@ class Build extends BaseModel{
   @override
   String documentId() => _documentId;
 
+  @override
   Build.fromMap(DocumentSnapshot document) {
     _documentId = document.id;
 

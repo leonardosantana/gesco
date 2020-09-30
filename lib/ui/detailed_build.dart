@@ -144,7 +144,7 @@ class _DetailedBuildState extends State<DetailedBuild> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
-                              OrderTile(order: widget.build.orders[index], buildPage: false,)
+                              OrderTile(orderPath: 'build/${widget.build.documentId()}/orders/${widget.build.orders[index].documentId()}')
                             ],
                           );
                         },

@@ -83,9 +83,17 @@ class NewBuildBloc extends BlocBase {
     Navigator.pop(context);
   }
 
-  void addOrder(String documentId, Order order) {
+  void addOrder(Build build, Order order) {
 
-    _repository.addOrder(documentId, order);
+    order.quantity = order.items.length;
+
+    if(build.orders == null){
+      build.orders = new List<Order>();
+    }
+
+    build.orders.add(order);
+
+    _repository.addOrder(build.documentId(), order);
   }
 
 }

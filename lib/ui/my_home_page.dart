@@ -154,10 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
                                   children: <Widget>[
-                                    OrderTile(
-                                      order: tickects[index],
-                                      buildPage: true,
-                                    )
+                                    //OrderTile(orderPath: widget.,)
                                   ],
                                 );
                               },

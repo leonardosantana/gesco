@@ -77,4 +77,31 @@ class BuildRepository extends Disposable {
       .collection('items')
       .snapshots()
       .map((event) => event.docs.map<Item>((e) => Item.fromMap(e)).toList());
-}
+
+  Future<Order> getOrder(String documentPath) async {
+
+    DocumentSnapshot document = await FirebaseFirestore.instance.doc(documentPath).get();
+
+    return Order.fromMap(document);
+
+  }
+
+
+  Future<Build> getBuildbyOrderPath(String orderPath) async {
+
+    String documentPath = orderPath.substring(0, orderPath.indexOf('/orders'));
+
+    DocumentSnapshot document = await FirebaseFirestore.instance.doc(documentPath).get();
+
+    return Build.fromMap(document);
+
+  }
+
+  Future<List<Item>> getItemsByPath(String  orderPath) => FirebaseFirestore.instance.doc(orderPath)
+    .collection('items')
+      .snapshots()
+      .map((event) => event.docs.map<Item>((e) => Item.fromMap(e)).toList()).first;
+
+
+
+  }

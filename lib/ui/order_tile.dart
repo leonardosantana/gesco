@@ -2,6 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gesco/app/build/build_model.dart';
+import 'package:gesco/app/order/order_bloc.dart';
 import 'package:gesco/controller/order_controller.dart';
 import 'package:gesco/controller/user_controller.dart';
 import 'package:gesco/models/order.dart';
@@ -10,12 +12,19 @@ import 'detailed_order.dart';
 
 class OrderTile extends StatefulWidget {
 
-  Order order;
+  String orderPath;
 
-  bool buildPage;
+  Future<Order> _order;
+  Future<Build> _build;
+
 
   OrderTile(
-      {@required this.order, @required this.buildPage});
+      {@required this.orderPath}){
+    OrderBloc orderBloc = OrderBloc();
+
+    _order = orderBloc.getOrder(orderPath);
+    _build = orderBloc.getBuildbyOrderPath(orderPath);
+  }
 
   @override
   _OrderTileState createState() => _OrderTileState();
@@ -29,7 +38,16 @@ class _OrderTileState extends State<OrderTile> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DetailedOrder(order: widget.order,user: UserController.user)));
+                builder: (context) => FutureBuilder(
+                  future: widget._build,
+                  builder: (context, buildSnap){
+                    if(buildSnap.connectionState == ConnectionState.done) {
+                      return DetailedOrder(
+                        orderPath: widget.orderPath, build: buildSnap.data,);
+                    }
+                    return SizedBox();//TODO loading page
+                  }),
+                ));
       },
       child: Card(
         elevation: 5.0,
@@ -38,13 +56,17 @@ class _OrderTileState extends State<OrderTile> {
           padding: EdgeInsets.all(5.0),
           height: 60.0,
           //color: getColorFromCategory(widget.category).withOpacity(0.5),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Row(
+          child: FutureBuilder(
+            future: widget._order,
+            builder: (context, orderSnap){
+              Order order = orderSnap.data;
+              return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    /*Container(
+                    Row(
+                      children: <Widget>[
+                        /*Container(
                       width: 50.0,
                       height: 50.0,
                       //color: Colors.white,
@@ -53,44 +75,46 @@ class _OrderTileState extends State<OrderTile> {
                     SizedBox(
                       width: 2,
                     ),*/
-                    Container(
-                      //width: 120.0,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'ordem nº',//${widget.order.id}*/',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w800),
-                          ),
-                          Container(
-                              decoration: BoxDecoration(
-                                color: OrderController.getColorFromStatus(widget.order.status),
-                                borderRadius: BorderRadius.circular(15),
+                        Container(
+                          //width: 120.0,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'ordem nº',//${widget.order.id}*/',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w800),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 2.0, horizontal: 5),
-                                child: Text(widget.order.status),
-                              )),
+                              Container(
+                                  decoration: BoxDecoration(
+                                    color: OrderController.getColorFromStatus(order.status),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 2.0, horizontal: 5),
+                                    child: Text(order.status),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Text('Itens: ${order.quantity}'),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-                Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Text('Itens: ${widget.order.items.length}'),
-                    ],
-                  ),
-                )
-              ]),
+                    )
+                  ]);
+            },
+          ),
         ),
       ),
     );

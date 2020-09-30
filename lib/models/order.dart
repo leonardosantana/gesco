@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gesco/shared/base_model.dart';
 
 import 'item.dart';
 
-class Order {
+class Order extends BaseModel {
   String _documentId;
 
   Color color;
@@ -24,6 +25,7 @@ class Order {
     this.modified = false;
   }
 
+  @override
   toMap() {
     var map = new Map<String, dynamic>();
 
@@ -36,6 +38,10 @@ class Order {
     return map;
   }
 
+  @override
+  String documentId() => _documentId;
+
+  @override
   Order.fromMap(DocumentSnapshot document) {
     _documentId = document.id;
 
