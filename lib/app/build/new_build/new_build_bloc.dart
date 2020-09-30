@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,9 +15,16 @@ class NewBuildBloc extends BlocBase {
     super.dispose();
   }
 
+  List<Build> _builds;
+  List<Build> get builds => _builds;
+
+  final _blocController = StreamController<List<Build>>();
+
+  Stream<List<Build>>
+
   User _user;
 
-  NewBuildBloc(){
+  NewBuildBloc() {
     _user = initUser();
   }
 
@@ -26,21 +35,17 @@ class NewBuildBloc extends BlocBase {
   }
 
   bool formValidate(GlobalKey<FormState> formKey) {
-
-    if(formKey.currentState.validate()) {
-
+    if (formKey.currentState.validate()) {
       formKey.currentState.save();
 
       return true;
     }
 
     return false;
-
   }
 
   validateIsNull(String value, String message) {
-
-    if(CommonValidator.validateEmptyString(value)){
+    if (CommonValidator.validateEmptyString(value)) {
       return message;
     }
 
@@ -52,15 +57,23 @@ class NewBuildBloc extends BlocBase {
   }
 
   String validateUser(String value, String message) {
-
-    if(!CommonValidator.validateEmail(value)){
+    if (!CommonValidator.validateEmail(value)) {
       return message;
     }
 
     return null;
   }
 
-  saveBuild(String name, String address, double buildSize, String zipCode, String builder, String engineer, bool engineerSwitch, String phase, BuildContext context) {
+  saveBuild(
+      String name,
+      String address,
+      double buildSize,
+      String zipCode,
+      String builder,
+      String engineer,
+      bool engineerSwitch,
+      String phase,
+      BuildContext context) {
     Build newBuild = Build();
 
     newBuild.name = name;
@@ -69,32 +82,49 @@ class NewBuildBloc extends BlocBase {
     newBuild.zipCode = zipCode;
     newBuild.builder = builder;
     newBuild.engineer = engineer;
-    newBuild.buildImage = 'https://www.conjur.com.br/img/b/pedreiro-ajudante-obra.png';
+    newBuild.buildImage =
+        'https://www.conjur.com.br/img/b/pedreiro-ajudante-obra.png';
     newBuild.color = Colors.red;
     newBuild.cust = 0.0;
     newBuild.progress = 0.0;
     newBuild.owner = _user.email;
     newBuild.phase = phase;
     newBuild.orderNeedsAproval = engineerSwitch;
-    newBuild.orders= new List<Order>();
+    newBuild.orders = new List<Order>();
+    newBuild.ordersNumber = 0;
 
     _repository.add(newBuild);
+
+    _builds.add(newBuild);
+    _blocController.sink.add(builds);
 
     Navigator.pop(context);
   }
 
   void addOrder(Build build, Order order) {
+    if (build.orders == null) {
+      build.orders = new List<Order>();
+    }
 
     order.quantity = order.items.length;
 
-    if(build.orders == null){
-      build.orders = new List<Order>();
+    if(order.orderNumber == null) {
+      order.orderNumber = ++build.ordersNumber;
     }
 
     build.orders.add(order);
 
+
+    _repository.update(build.documentId(), build);
     _repository.addOrder(build.documentId(), order);
   }
 
-}
+  void updateOrder(Build build, Order order) {
 
+    order.quantity = order.items.length;
+    _repository.updateOrder(build.documentId(), order);
+
+
+
+  }
+}

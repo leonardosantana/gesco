@@ -82,7 +82,7 @@ class _OrderTileState extends State<OrderTile> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                'ordem nº',//${widget.order.id}*/',
+                                'ordem nº${order.orderNumber}',
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: Colors.black,

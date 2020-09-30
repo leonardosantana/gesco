@@ -25,6 +25,7 @@ class NewOrderPage extends StatefulWidget {
           quantity: 0,
           cust: 0,
           items: new List<Item>());
+      this.order.orderNumber = ++this.build.ordersNumber;
     }
   }
 
@@ -194,6 +195,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
                       setState(() {
                         Order order = widget.order;
                         widget.order.items.add(Item(
+                            productId: product.documentId,
                             product: product,
                             quantity: int.parse(myController.text)));
                         Navigator.pop(context);

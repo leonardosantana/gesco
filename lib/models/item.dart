@@ -12,7 +12,7 @@ class Item {
   int delivered;
   double price;
 
-  Item({@required this.product, @required this.quantity, this.price, this.delivered});
+  Item({@required this.product, @required this.quantity, this.price, this.delivered, this.productId});
 
   toMap() {
 
@@ -30,7 +30,7 @@ class Item {
   Item.fromMap(DocumentSnapshot document) {
     _documentId = document.id;
 
-    this.productId = document.data()["product"];
+    this.productId = document.data()["productId"];
     this.quantity = document.data()["quantity"];
     this.delivered = document.data()["delivered"];
     this.price = document.data()["price"];

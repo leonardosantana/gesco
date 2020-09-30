@@ -13,6 +13,7 @@ class Order extends BaseModel {
   int quantity;
   double cust;
   bool modified;
+  int orderNumber;
   List<Item> items;
 
   Order(
@@ -34,6 +35,7 @@ class Order extends BaseModel {
     map['quantity'] = this.quantity;
     map['cust'] = this.cust;
     map['modified'] = this.modified;
+    map['orderNumber'] = this.orderNumber;
 
     return map;
   }
@@ -45,12 +47,15 @@ class Order extends BaseModel {
   Order.fromMap(DocumentSnapshot document) {
     _documentId = document.id;
 
-    this.cust = document.data()["cust"];
+    var dataMap = document.data();
+
+    this.cust = dataMap["cust"];
     this.color = Colors.red; //document.data()["color"];
-    this.status = document.data()["status"];
-    this.quantity = document.data()["quantity"];
-    this.cust = document.data()["cust"];
-    this.modified = document.data()["modified"];
-    this.items = document.data()["items"];
+    this.status = dataMap["status"];
+    this.quantity = dataMap["quantity"];
+    this.cust = dataMap["cust"];
+    this.modified = dataMap["modified"];
+    this.items = dataMap["items"];
+    this.orderNumber = dataMap["orderNumber"];
   }
 }

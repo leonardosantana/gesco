@@ -54,6 +54,17 @@ class _DetailedOrderState extends State<DetailedOrder> {
           return SizedBox();
         }
         Order order = orderSnap.data;
+        if(order.items == null){
+          return FutureBuilder(
+            future: widget._orderBloc.getItems(widget.orderPath),
+            builder: (context, itemsSnap){
+              if(itemsSnap.connectionState != ConnectionState.done)
+                return SizedBox();
+              order.items = itemsSnap.data;
+              return buildOrderContainer(context, order);
+            },
+          );
+        }
         return buildOrderContainer(context, order);
       },
     );
@@ -108,7 +119,7 @@ class _DetailedOrderState extends State<DetailedOrder> {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        'Ordem Nº',
+                                        'Ordem Nº${order.orderNumber}',
                                         style: TextStyle(
                                             fontSize: 24.0,
                                             fontWeight: FontWeight.w600),
@@ -404,7 +415,7 @@ class _DetailedOrderState extends State<DetailedOrder> {
                     setState(() {
                       order.status = 'aprovação pendente';
                       order.modified
-                          ? order.modified = false
+                          ? updateOrderInBuild(widget.build, order)
                           : addOrderInBuild(widget.build, order);
 
                       Navigator.pop(context);
@@ -430,6 +441,12 @@ class _DetailedOrderState extends State<DetailedOrder> {
     NewBuildBloc _bloc = new NewBuildBloc();
 
     _bloc.addOrder(build, order);
+  }
+
+  void updateOrderInBuild(Build build, Order order) {
+    NewBuildBloc _bloc = new NewBuildBloc();
+
+    _bloc.updateOrder(build, order);
   }
 
   Widget getButtonToCheckBuyedItems(Order order) {

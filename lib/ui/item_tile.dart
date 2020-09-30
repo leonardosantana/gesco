@@ -17,8 +17,13 @@ class ItemTile extends StatefulWidget {
   String orderId;
 
   ItemTile({ this.itemId, this.item, @required this.buildId, @required this.orderId, @required this.status}){
-    if(itemId != null)
-      awaitItem = _itemBloc.getItem(buildId, orderId, itemId);
+
+      var docId = itemId != null? itemId: this.item.getId();
+
+      if(docId != null) {
+        awaitItem = _itemBloc.getItem(buildId, orderId, docId);
+      }
+
   }
 
   @override
@@ -28,9 +33,9 @@ class ItemTile extends StatefulWidget {
 class _ItemTileState extends State<ItemTile> {
   @override
   Widget build(BuildContext context) {
-    if(widget.item != null)
+    if(widget.item != null){
       return buildItemTile(widget.item);
-
+    }
     return FutureBuilder(
       future: widget.awaitItem,
       builder: (context, itemSnap) {
@@ -72,7 +77,7 @@ class _ItemTileState extends State<ItemTile> {
 
   Widget buildProductName(Item item){
 
-    Future<Product> awaitProduct = widget._productBloc.getProduct(item.productId);
+    Future<Product> awaitProduct = widget._productBloc.getProduct(buildProductId(item));
 
     return FutureBuilder(
       future: awaitProduct,
@@ -86,6 +91,8 @@ class _ItemTileState extends State<ItemTile> {
     );
 
   }
+
+  String buildProductId(Item item) => item.productId == null ? item.product.documentId : item.productId;
 
   String getTextFromStatus(Item item, String status) {
     return status == 'entregue' ?

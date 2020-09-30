@@ -24,6 +24,16 @@ class BuildRepository extends Disposable {
   void update(String documentId, Build build) =>
       _collection.doc(documentId).update(build.toMap());
 
+  void updateOrder(String buildId, Order order) {
+    _collection.doc(buildId).collection('orders').doc(order.documentId()).update(order.toMap());
+
+    order.items.where((element) => element.getId() == null).forEach((element) {
+      _collection.doc(buildId).collection('orders').doc(order.documentId()).collection('items').add(element.toMap());
+    });
+
+
+  }
+
   Future addOrder(String documentId, Order order) => _collection
           .doc(documentId)
           .collection('orders')
