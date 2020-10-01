@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gesco/app/build/build_bloc.dart';
 import 'package:gesco/app/build/build_model.dart';
-import 'package:gesco/app/build/new_build/new_build_bloc.dart';
 import 'package:gesco/app/order/new_order/new_order_page.dart';
 import 'package:gesco/app/order/order_bloc.dart';
 import 'package:gesco/controller/order_controller.dart';
@@ -438,13 +438,13 @@ class _DetailedOrderState extends State<DetailedOrder> {
   }
 
   void addOrderInBuild(Build build, Order order) {
-    NewBuildBloc _bloc = new NewBuildBloc();
+    BuildBloc _bloc = new BuildBloc();
 
     _bloc.addOrder(build, order);
   }
 
   void updateOrderInBuild(Build build, Order order) {
-    NewBuildBloc _bloc = new NewBuildBloc();
+    BuildBloc _bloc = new BuildBloc();
 
     _bloc.updateOrder(build, order);
   }

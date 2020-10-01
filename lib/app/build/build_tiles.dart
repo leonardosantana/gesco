@@ -6,11 +6,13 @@ import 'package:gesco/ui/common_styles.dart';
 import 'package:gesco/ui/menu_page.dart';
 
 import '../../ui/detailed_build.dart';
+import 'build_bloc.dart';
 
 class BuildTile extends StatefulWidget {
   Build build;
+  BuildBloc bloc;
 
-  BuildTile({@required this.build});
+  BuildTile({@required this.build, @required this.bloc});
 
   @override
   _BuildTileState createState() => _BuildTileState();
@@ -33,7 +35,7 @@ class _BuildTileState extends State<BuildTile> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => widget.build == null
-                        ? NewBuildPage()
+                        ? NewBuildPage(bloc: widget.bloc)
                         : DetailedBuild(build: widget.build)));
           },
           child: widget.build == null ? buildEmptyTile() : buildDetailed(),

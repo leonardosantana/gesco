@@ -8,10 +8,11 @@ import 'package:gesco/app/build/build_repository.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/utils/common_validator.dart';
 
-class NewBuildBloc extends BlocBase {
+class BuildBloc extends BlocBase {
   //dispose will be called automatically by closing its streams
   @override
   void dispose() {
+    _blocController.close();
     super.dispose();
   }
 
@@ -20,12 +21,13 @@ class NewBuildBloc extends BlocBase {
 
   final _blocController = StreamController<List<Build>>();
 
-  Stream<List<Build>>
+  Stream<List<Build>> get buildsStream => _blocController.stream;
 
   User _user;
 
-  NewBuildBloc() {
+  BuildBloc() {
     _user = initUser();
+
   }
 
   BuildRepository _repository = new BuildRepository();
@@ -101,6 +103,13 @@ class NewBuildBloc extends BlocBase {
     Navigator.pop(context);
   }
 
+  getBuilding() async{
+    var buildRepository = new BuildRepository();
+
+    _builds = await buildRepository.builds.first;
+    _blocController.sink.add(builds);
+  }
+
   void addOrder(Build build, Order order) {
     if (build.orders == null) {
       build.orders = new List<Order>();
@@ -123,8 +132,6 @@ class NewBuildBloc extends BlocBase {
 
     order.quantity = order.items.length;
     _repository.updateOrder(build.documentId(), order);
-
-
 
   }
 }
