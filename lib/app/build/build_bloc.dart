@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gesco/app/build/build_model.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/getx_app/build/build_model.dart';
 import 'package:gesco/app/build/build_repository.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/utils/common_validator.dart';
@@ -95,7 +95,7 @@ class BuildBloc extends BlocBase {
     newBuild.orders = new List<Order>();
     newBuild.ordersNumber = 0;
 
-    _repository.add(newBuild);
+    //_repository.add(newBuild);
 
     _builds.add(newBuild);
     _blocController.sink.add(builds);
@@ -106,7 +106,7 @@ class BuildBloc extends BlocBase {
   getBuilding() async{
     var buildRepository = new BuildRepository();
 
-    _builds = await buildRepository.builds.first;
+    _builds = null;//await buildRepository.builds.first;
     _blocController.sink.add(builds);
   }
 
@@ -124,7 +124,7 @@ class BuildBloc extends BlocBase {
     build.orders.add(order);
 
 
-    _repository.update(build.documentId(), build);
+    //_repository.update(build.documentId(), build);
     _repository.addOrder(build.documentId(), order);
   }
 

@@ -9,7 +9,8 @@ class Order extends BaseModel {
 
   Color color;
   String category;
-  String status;
+  int status;
+  String buildName;
   int quantity;
   double cust;
   bool modified;
@@ -22,7 +23,8 @@ class Order extends BaseModel {
       @required this.status,
       @required this.quantity,
       @required this.cust,
-      @required this.items}) {
+      @required this.items,
+      this.orderNumber}) {
     this.modified = false;
   }
 

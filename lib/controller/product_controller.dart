@@ -6,7 +6,7 @@ import 'package:gesco/models/product.dart';
 
 class ProductController{
 
-  static List<Category> categories = CategoryController.getCategories();
+  static List<Category> categories = List<Category>();
 
 
   Future<List<Product>> getProducts() async{

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:gesco/app/build/build_model.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/getx_app/build/build_model.dart';
 import 'package:gesco/app/build/build_repository.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/order.dart';
@@ -14,12 +14,15 @@ class OrderBloc extends BlocBase {
   }
 
   List<Order> _orders = List<Order>();
+  List<Order> _buildOrders = List<Order>();
 
   List<Order> get orders => _orders;
 
   final _blocController = StreamController<List<Order>>();
+  final _blocOrdersController = StreamController<List<Order>>();
 
-  Stream<List<Order>> get ordersStream => _blocController.stream;
+  Stream<List<Order>> get ordersStream => _blocController.stream.asBroadcastStream();
+  Stream<List<Order>> get buildOrdersStream => _blocOrdersController.stream.asBroadcastStream();
 
   BuildRepository _buildRepository = BuildRepository();
 
@@ -28,7 +31,7 @@ class OrderBloc extends BlocBase {
   }
 
   Future<Build> getBuildbyOrderPath(String orderPath) {
-    return _buildRepository.getBuildbyOrderPath(orderPath);
+    return null;//_buildRepository.getBuildbyOrderPath(orderPath);
   }
 
   Future<List<Item>> getItems(String orderPath) {
@@ -40,7 +43,7 @@ class OrderBloc extends BlocBase {
 
     _orders = List<Order>();
 
-    List<Build> builds = await buildRepository.builds.first;
+    List<Build> builds = null;//await buildRepository.builds.first;
     List<Order> orders;
 
     builds.forEach((element) async {
@@ -53,5 +56,15 @@ class OrderBloc extends BlocBase {
 
 
 
+  }
+
+  void getOrdersByBuild(Build build) async {
+    _buildOrders = await _buildRepository.getOrders(build.documentId()).first;
+    _blocOrdersController.sink.add(_buildOrders);
+  }
+
+  void addOrderOnBuild(Order order){
+    _buildOrders.add(order);
+    _blocOrdersController.sink.add(_buildOrders);
   }
 }

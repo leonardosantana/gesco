@@ -184,7 +184,7 @@ class _CheckItemsState extends State<CheckItems> {
                           child: FlatButton(
                             onPressed: () {
                               setState(() {
-                                widget.order.status = 'entregue';
+                                //widget.order.status = 'entregue';
                                 Navigator.pop(context);
                               });
                             },

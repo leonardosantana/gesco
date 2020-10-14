@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gesco/app/build/build_model.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/getx_app/build/build_model.dart';
 import 'package:gesco/app/order/order_bloc.dart';
 import 'package:gesco/controller/order_controller.dart';
 import 'package:gesco/controller/user_controller.dart';
@@ -11,6 +11,7 @@ import 'package:gesco/models/order.dart';
 import 'detailed_order.dart';
 
 class OrderTile extends StatefulWidget {
+
 
   String orderPath;
   Order ticket;
@@ -120,7 +121,7 @@ class _OrderTileState extends State<OrderTile> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      'ordem nº${order.orderNumber}',
+                      order.orderNumber!= null? 'ordem nº${order.orderNumber}':'nova ordem',
                       style: TextStyle(
                           fontSize: 20,
                           color: Colors.black,
@@ -128,13 +129,12 @@ class _OrderTileState extends State<OrderTile> {
                     ),
                     Container(
                         decoration: BoxDecoration(
-                          color: OrderController.getColorFromStatus(order.status),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 2.0, horizontal: 5),
-                          child: Text(order.status),
+                          child: Text(''),
                         )),
                   ],
                 ),

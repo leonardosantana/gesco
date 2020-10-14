@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/product.dart';
 import 'package:gesco/models/order.dart';
@@ -41,47 +42,9 @@ class OrderController {
   ];
 
   static List<Order> _orders = [
-    Order(
-        color: Colors.blueAccent,
-        category: 'hydraulic',
-        cust: 10000.00,
-        quantity: 10,
-        status: 'aprovação pendente',
-        items: _itens),
-    Order(
-        color: Colors.blueAccent,
-        category: 'eletric',
-        cust: 10000.00,
-        quantity: 11,
-        status: 'aguardando compra',
-        items: _itens),
-    Order(
-        color: Colors.blueAccent,
-        category: 'hydraulic',
-        cust: 10000.00,
-        quantity: 20,
-        status: 'aguardando entrega',
-        items: _itens),
-    Order(
-        color: Colors.blueAccent,
-        category: 'hydraulic',
-        cust: 10000.00,
-        quantity: 78,
-        status: 'entregue',
-        items: _itensDelivered),
   ];
 
   static List<Order> getOrders() => _orders;
 
-  static getColorFromStatus(String status) {
-    Map<String, Color> categoryAsset = HashMap();
 
-    categoryAsset['aprovação pendente'] = Colors.yellow;
-    categoryAsset['aguardando compra'] = Colors.orangeAccent;
-    categoryAsset['aguardando entrega'] = Colors.blue;
-    categoryAsset['entregue'] = Colors.green;
-    categoryAsset['concluído'] = Colors.grey;
-
-    return categoryAsset[status];
-  }
 }

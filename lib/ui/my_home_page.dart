@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/app/build/build_bloc.dart';
-import 'package:gesco/app/build/build_model.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/getx_app/build/build_model.dart';
 import 'package:gesco/app/build/build_tiles.dart';
 import 'package:gesco/app/order/order_bloc.dart';
 import 'package:gesco/models/order.dart';
@@ -134,7 +134,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                             build: index == builds.length
                                                 ? null
                                                 : builds[index],
-                                          bloc: bloc
+                                          bloc: bloc,
+                                          orderBloc: blocOrders
                                         );
                                       },
                                     );

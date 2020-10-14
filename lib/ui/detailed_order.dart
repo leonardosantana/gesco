@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/app/build/build_bloc.dart';
-import 'package:gesco/app/build/build_model.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/getx_app/build/build_model.dart';
 import 'package:gesco/app/order/new_order/new_order_page.dart';
 import 'package:gesco/app/order/order_bloc.dart';
 import 'package:gesco/controller/order_controller.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/order.dart';
+import 'package:gesco/ui/detailed_build.dart';
 
 import 'app_header.dart';
 import 'check_items.dart';
@@ -20,12 +21,11 @@ class DetailedOrder extends StatefulWidget {
   Build build;
   String orderPath;
 
-  OrderBloc _orderBloc;
+  OrderBloc orderBloc;
 
-  DetailedOrder({this.orderPath, this.newOrder, @required this.build}) {
-    _orderBloc = OrderBloc();
+  DetailedOrder({this.orderPath, this.newOrder, @required this.build, @required this.orderBloc }) {
     if (orderPath != null) {
-      _order = _orderBloc.getOrder(orderPath);
+      _order = orderBloc.getOrder(orderPath);
     }
   }
 
@@ -56,7 +56,7 @@ class _DetailedOrderState extends State<DetailedOrder> {
         Order order = orderSnap.data;
         if(order.items == null){
           return FutureBuilder(
-            future: widget._orderBloc.getItems(widget.orderPath),
+            future: widget.orderBloc.getItems(widget.orderPath),
             builder: (context, itemsSnap){
               if(itemsSnap.connectionState != ConnectionState.done)
                 return SizedBox();
@@ -126,16 +126,13 @@ class _DetailedOrderState extends State<DetailedOrder> {
                                       ),
                                       Container(
                                           decoration: BoxDecoration(
-                                            color: OrderController
-                                                .getColorFromStatus(
-                                                    order.status),
                                             borderRadius:
                                                 BorderRadius.circular(15),
                                           ),
                                           child: Padding(
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 2.0, horizontal: 5),
-                                            child: Text(order.status),
+                                            child: Text(''),
                                           )),
                                     ],
                                   ),
@@ -167,7 +164,7 @@ class _DetailedOrderState extends State<DetailedOrder> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text('Item'),
-                                Text(getTextFromStatus(order.status)),
+                                Text(''),
                               ],
                             ),
                             buildItems(order),
@@ -192,7 +189,7 @@ class _DetailedOrderState extends State<DetailedOrder> {
     }
 
     return FutureBuilder(
-      future: widget._orderBloc.getItems(widget.orderPath),
+      future: widget.orderBloc.getItems(widget.orderPath),
       builder: (context, itemsSnapshot) {
         if (itemsSnapshot.connectionState != ConnectionState.done) {
           return SizedBox();
@@ -216,14 +213,13 @@ class _DetailedOrderState extends State<DetailedOrder> {
           buildId: widget.build.documentId(),
           orderId: order.documentId(),
           item: items[index],
-          status: order.status,
         );
       },
     );
   }
 
   Widget actionFromStatus(Order order) {
-    switch (order.status) {
+    /*switch (order.status) {
       case 'aguardando entrega':
         return getButtonCheckDelivery(order);
       case 'aprovação pendente':
@@ -234,7 +230,7 @@ class _DetailedOrderState extends State<DetailedOrder> {
         return getButtonAddItensOrFinalize(order);
       case 'aguardando compra':
         return getButtonToCheckBuyedItems(order);
-    }
+    }*/
     return Text('-');
   }
 
@@ -250,7 +246,7 @@ class _DetailedOrderState extends State<DetailedOrder> {
           child: FlatButton(
             onPressed: () {
               setState(() {
-                order.status = 'aberta';
+                //order.status = 'aberta';
                 order.modified = true;
               });
             },
@@ -271,7 +267,7 @@ class _DetailedOrderState extends State<DetailedOrder> {
           child: FlatButton(
             onPressed: () {
               setState(() {
-                order.status = 'aguardando compra';
+
               });
             },
             child: Text(
@@ -331,7 +327,6 @@ class _DetailedOrderState extends State<DetailedOrder> {
       child: FlatButton(
         onPressed: () {
           setState(() {
-            order.status = 'concluído';
           });
         },
         child: Text(
@@ -413,12 +408,14 @@ class _DetailedOrderState extends State<DetailedOrder> {
                 child: FlatButton(
                   onPressed: () {
                     setState(() {
-                      order.status = 'aprovação pendente';
                       order.modified
                           ? updateOrderInBuild(widget.build, order)
                           : addOrderInBuild(widget.build, order);
+                      widget.orderBloc.addOrderOnBuild(order);
 
-                      Navigator.pop(context);
+                      Navigator.pushReplacement(context,MaterialPageRoute(
+                          builder: (context) => DetailedBuild(
+                              build: widget.build)));
                     });
                   },
                   child: Text(
@@ -458,7 +455,6 @@ class _DetailedOrderState extends State<DetailedOrder> {
       child: FlatButton(
         onPressed: () {
           setState(() {
-            order.status = 'aguardando entrega';
           });
         },
         child: Text(

@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/order.dart';
 
-import 'build_model.dart';
+import '../../getx_app/build/build_model.dart';
 
 class BuildRepository extends Disposable {
   User _user = FirebaseAuth.instance.currentUser;
@@ -111,7 +111,6 @@ class BuildRepository extends Disposable {
     .collection('items')
       .snapshots()
       .map((event) => event.docs.map<Item>((e) => Item.fromMap(e)).toList()).first;
-
 
 
   }

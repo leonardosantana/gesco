@@ -19,7 +19,9 @@ environment:
 dependencies:
   rxdart: ^0.24.1
   bloc_pattern: ^2.5.1
+  get: ^3.12.1
   intl: ^0.16.1
+  dropdown_search: ^0.4.4
   cloud_firestore: ^0.14.0+2
   flutter:
     sdk: flutter

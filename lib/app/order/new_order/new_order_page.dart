@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gesco/app/build/build_model.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/getx_app/build/build_model.dart';
 import 'package:gesco/app/order/new_order/new_order_bloc.dart';
+import 'package:gesco/app/order/order_bloc.dart';
 import 'package:gesco/controller/product_controller.dart';
+import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/models/product.dart';
@@ -13,15 +15,16 @@ class NewOrderPage extends StatefulWidget {
   final String title;
   Build build;
   Order order;
+  OrderBloc bloc;
 
   NewOrderPage(
-      {@required this.build, this.order, Key key, this.title = "NewOrder"})
+      {@required this.build, this.order, Key key, this.title = "NewOrder", @required this.bloc})
       : super(key: key) {
     if (this.order == null) {
       this.order = Order(
           color: Colors.blue,
           category: '',
-          status: 'aberta',
+          status: OrderStatusEnum.CRIANDO.index,
           quantity: 0,
           cust: 0,
           items: new List<Item>());
@@ -204,7 +207,7 @@ class _NewOrderPageState extends State<NewOrderPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => DetailedOrder(
-                                    build: widget.build, newOrder: order)));
+                                    build: widget.build, newOrder: order, orderBloc: widget.bloc)));
                       });
                     }
                   },
