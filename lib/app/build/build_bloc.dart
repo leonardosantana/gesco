@@ -125,13 +125,13 @@ class BuildBloc extends BlocBase {
 
 
     //_repository.update(build.documentId(), build);
-    _repository.addOrder(build.documentId(), order);
+    _repository.addOrder(build.documentId, order);
   }
 
   void updateOrder(Build build, Order order) {
 
     order.quantity = order.items.length;
-    _repository.updateOrder(build.documentId(), order);
+    _repository.updateOrder(build.documentId, order);
 
   }
 }

@@ -3,11 +3,13 @@ import 'package:gesco/app/build/build_repository.dart';
 import 'package:gesco/app/product/category_repository.dart';
 import 'package:gesco/getx_app/build/build_model.dart';
 import 'package:gesco/getx_app/build/detailed_build/detailed_build_controller.dart';
+import 'package:gesco/getx_app/home_page/home_page.dart';
 import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/category.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/models/product.dart';
+import 'package:gesco/ui/application_page.dart';
 import 'package:get/get.dart';
 
 class NewOrderController extends GetxController {
@@ -22,7 +24,7 @@ class NewOrderController extends GetxController {
   Rx<TextEditingController> quantityController = TextEditingController().obs;
   var notFoundProduct = 'Nenhum Produto encontrado';
   var emptyCategory = 'Selecione uma Categoria';
-  var emptyProduct = Product(name:'Selecione um Produto');
+  var emptyProduct = Product(name: 'Selecione um Produto');
   Rx<Product> product = Product().obs;
 
   Rx<GlobalKey<FormState>> formKey = GlobalKey<FormState>().obs;
@@ -51,10 +53,12 @@ class NewOrderController extends GetxController {
   }
 
   addItem() {
-    if(product.value.name.isNull || product.value == emptyProduct)
+    if (product.value.name.isNull || product.value == emptyProduct)
       Get.snackbar('Erro', 'selecione um produto valido');
-    else if(formKey.value.currentState.validate()){
-      Item item = Item(quantity: int.parse(this.quantityController.value.text.toString()), product: product.value);
+    else if (formKey.value.currentState.validate()) {
+      Item item = Item(
+          quantity: int.parse(this.quantityController.value.text.toString()),
+          product: product.value);
       items.add(item);
       resetProduct();
       Get.back();
@@ -62,27 +66,33 @@ class NewOrderController extends GetxController {
   }
 
   saveOrder() {
-    //order.value.items.addAll(items);
+    print('saving order in ${_build.documentId}');
     order.value.quantity = items.length;
     _build.ordersNumber++;
     order.value.status = OrderStatusEnum.APROVACAO_PENDENTE.index;
 
-    _buildRepository.update(_build.documentId(), _build);
-    _buildRepository.addOrder(_build.documentId(), order.value);
+    _buildRepository.addOrder(_build.documentId, order.value).then((value) {
+      print('order added with id ${value}');
+      _buildRepository.update(_build.documentId, _build).then((value) {
+        DetailedBuildController buildController =
+            Get.put(DetailedBuildController(build: _build), tag: _build.documentId);
+        buildController.orders.add(order.value);
+        buildController.build = _build;
 
-    DetailedBuildController buildController = Get.find(tag: _build.documentId());
-    buildController.orders.add(order.value);
-
-    Get.back();
-    Get.delete();
+        Get.close(1);
+        Get.to(ApplicationPage());
+        Get.reset();
+      });
+    });
   }
 
   Future<List<Category>> initializeCategories() async =>
       await _categoryRepository.categories.first;
 
   changeSelectedCategory(String value) async {
-    if(items.length > 0){
-      Get.snackbar('Erro', 'Só é possivel adicionar items de uma mesma categoria');
+    if (items.length > 0) {
+      Get.snackbar(
+          'Erro', 'Só é possivel adicionar items de uma mesma categoria');
       return;
     }
     products.clear();
@@ -95,9 +105,8 @@ class NewOrderController extends GetxController {
     } else {
       category.value =
           categories.firstWhere((element) => element.name == value);
-      products.addAll(await _categoryRepository
-          .products(category.value.documentId())
-          .first);
+      products.addAll(
+          await _categoryRepository.products(category.value.documentId).first);
       filteredProducts.addAll(products);
     }
   }
@@ -106,7 +115,7 @@ class NewOrderController extends GetxController {
     category.value = categories[0];
   }
 
-  void resetProduct(){
+  void resetProduct() {
     quantityController.value.text = '';
     product.value = emptyProduct;
   }
@@ -115,13 +124,14 @@ class NewOrderController extends GetxController {
     filteredProducts.clear();
     filteredProducts
         .addAll(products.where((element) => element.name.contains(value)));
-    if(filteredProducts.length == 0)
+    if (filteredProducts.length == 0)
       filteredProducts.add(Product(name: notFoundProduct));
   }
 
   selectProduct(String value) {
     //if(value != emptyProduct)
-      product.value = filteredProducts.firstWhere((element) => element.name == value);
+    product.value =
+        filteredProducts.firstWhere((element) => element.name == value);
   }
 
   removeItem(int index) {

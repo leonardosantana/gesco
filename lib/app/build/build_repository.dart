@@ -13,28 +13,34 @@ class BuildRepository extends Disposable {
   CollectionReference _collection =
       FirebaseFirestore.instance.collection('build');
 
-  Future add(Build build) {
-    _collection.add(build.toMap()).then((value) {
-      print("User Added");
-    }).catchError((error) {
-      print("Failed to add user: $error");
-    });
+  Future<String> add(Build build) {
+    return _collection
+        .add(build.toMap())
+        .then((value) => value.id)
+        .catchError((error) => print("Failed to add user: $error"));
   }
 
-  void update(String documentId, Build build) =>
+  Future<void> update(String documentId, Build build) =>
       _collection.doc(documentId).update(build.toMap());
 
   void updateOrder(String buildId, Order order) {
-    _collection.doc(buildId).collection('orders').doc(order.documentId()).update(order.toMap());
+    _collection
+        .doc(buildId)
+        .collection('orders')
+        .doc(order.documentId)
+        .update(order.toMap());
 
     order.items.where((element) => element.getId() == null).forEach((element) {
-      _collection.doc(buildId).collection('orders').doc(order.documentId()).collection('items').add(element.toMap());
+      _collection
+          .doc(buildId)
+          .collection('orders')
+          .doc(order.documentId)
+          .collection('items')
+          .add(element.toMap());
     });
-
-
   }
 
-  Future addOrder(String documentId, Order order) => _collection
+  Future<String> addOrder(String documentId, Order order) => _collection
           .doc(documentId)
           .collection('orders')
           .add(order.toMap())
@@ -48,6 +54,7 @@ class BuildRepository extends Disposable {
             print("Failed to add item: $error");
           });
         });
+        return value.id;
       }).catchError((error) {
         print("Failed to add order: $error");
       });
@@ -89,28 +96,26 @@ class BuildRepository extends Disposable {
       .map((event) => event.docs.map<Item>((e) => Item.fromMap(e)).toList());
 
   Future<Order> getOrder(String documentPath) async {
-
-    DocumentSnapshot document = await FirebaseFirestore.instance.doc(documentPath).get();
+    DocumentSnapshot document =
+        await FirebaseFirestore.instance.doc(documentPath).get();
 
     return Order.fromMap(document);
-
   }
-
 
   Future<Build> getBuildbyOrderPath(String orderPath) async {
-
     String documentPath = orderPath.substring(0, orderPath.indexOf('/orders'));
 
-    DocumentSnapshot document = await FirebaseFirestore.instance.doc(documentPath).get();
+    DocumentSnapshot document =
+        await FirebaseFirestore.instance.doc(documentPath).get();
 
     return Build.fromMap(document);
-
   }
 
-  Future<List<Item>> getItemsByPath(String  orderPath) => FirebaseFirestore.instance.doc(orderPath)
-    .collection('items')
-      .snapshots()
-      .map((event) => event.docs.map<Item>((e) => Item.fromMap(e)).toList()).first;
-
-
-  }
+  Future<List<Item>> getItemsByPath(String orderPath) =>
+      FirebaseFirestore.instance
+          .doc(orderPath)
+          .collection('items')
+          .snapshots()
+          .map((event) => event.docs.map<Item>((e) => Item.fromMap(e)).toList())
+          .first;
+}

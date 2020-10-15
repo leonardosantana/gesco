@@ -9,6 +9,7 @@ import '../build/build_model.dart';
 class HomePageController extends GetxController {
   List<Build> builds = List<Build>().obs;
   List<Order> orders = List<Order>().obs;
+  RxBool hideMenu = true.obs;
 
   @override
   Future<void> onInit() async {
@@ -19,11 +20,15 @@ class HomePageController extends GetxController {
 
     builds.forEach((element) async {
 
-      var iterableOrders = await repository.getOrders(element.documentId()).first;
+      var iterableOrders = await repository.getOrders(element.documentId).first;
       iterableOrders.forEach((order) {order.buildName = element.name;});
       orders.addAll(iterableOrders);
 
     });
 
+  }
+
+  changeSelectedMenu() {
+    hideMenu.value = !hideMenu.value;
   }
 }

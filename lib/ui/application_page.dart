@@ -10,12 +10,12 @@ class ApplicationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
-      body: HomePage()/*Stack(
+      body: Stack(
         children: <Widget>[
           MenuPage(),
-          MyHomePage(),
+          HomePage(),
         ],
-      ),*/
+      ),
     );
   }
 }

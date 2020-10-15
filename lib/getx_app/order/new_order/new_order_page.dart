@@ -45,7 +45,7 @@ class NewOrderPage extends GetView<NewOrderController> {
                         children: <Widget>[
                           InkWell(
                             onTap: () {
-                              Get.back();
+                              Get.close(1);
                               Get.reset();
                             },
                             child: AppHeader(isMainPage: false),
@@ -113,44 +113,27 @@ class NewOrderPage extends GetView<NewOrderController> {
       child: Container(
         padding: EdgeInsets.all(10.0),
         child: Column(
-          //crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              //width: 100.0,
-              //height: 100.0,
-              child: Row(
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: [
-                          Text(
-                            buildObj.name,
-                            style: TextStyle(
-                                fontSize: 24.0, fontWeight: FontWeight.w600),
-                          ),
-                          Text(
-                            '\tsolicitação nº${controller.order.value.orderNumber.toString()}',
-                            style: TextStyle(
-                                fontSize: 24.0, fontWeight: FontWeight.w600),
-                          ),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Text(buildObj.phase == null ? '' : buildObj.phase),
-                        ],
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              //width: 100.0,
-              //height: 100.0,
-              child: Row(
-                children: <Widget>[
+             Row(
+              //mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                Text(
+                  buildObj.name,
+                  style: TextStyle(
+                      fontSize: 24.0, fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  '\t - pedido nº${controller.order.value.orderNumber.toString()}',
+                  style: TextStyle(
+                      fontSize: 24.0, fontWeight: FontWeight.w600),
+                ),
+              ]
+             ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(buildObj.phase == null ? '' : buildObj.phase),
                   Container(
                       decoration: BoxDecoration(
                         color: OrderStatus.getColorFromStatus(
@@ -162,10 +145,15 @@ class NewOrderPage extends GetView<NewOrderController> {
                             vertical: 2.0, horizontal: 5),
                         child: Text(OrderStatus.getStatusFromEnum(
                             OrderStatusEnum.values[controller.order.value.status])),
-                      )),
+                      ),
+                  ),
+                  Text(
+                    '${buildObj.documentId}',
+                    style: TextStyle(
+                        fontSize: 12.0, fontWeight: FontWeight.w600),
+                  ),
                 ],
               ),
-            ),
           ],
         ),
       ),

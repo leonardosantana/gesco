@@ -19,7 +19,7 @@ class DetailedBuildPage extends StatelessWidget {
 
   DetailedBuildPage({this.buildObj}) {
     if (buildObj != null) {
-      controller = Get.put(DetailedBuildController(build: buildObj), tag: buildObj.documentId());
+      controller = Get.put(DetailedBuildController(build: buildObj), tag: buildObj.documentId);
     }
   }
 

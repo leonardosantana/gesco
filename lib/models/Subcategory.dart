@@ -4,14 +4,11 @@ import 'package:gesco/models/product.dart';
 import 'package:gesco/shared/base_model.dart';
 
 class Subcategory extends BaseModel{
-  String _documentId;
 
   String name;
 
   Product products;
 
-  @override
-  String documentId()=> _documentId;
 
   Subcategory({ @required this.name, this.products});
 
@@ -24,7 +21,7 @@ class Subcategory extends BaseModel{
   @override
   Subcategory.fromMap(DocumentSnapshot document){
 
-    _documentId = document.id;
+    documentId = document.id;
     name = document.data()['name'];
 
   }

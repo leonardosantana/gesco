@@ -173,7 +173,7 @@ class _DetailedBuildState extends State<DetailedBuild> {
   }
 
   OrderTile buildOrderTile(Order order) {
-    if (order.documentId() == null) return OrderTile(ticket: order);
-    return OrderTile(orderPath: 'build/${widget.build.documentId()}/orders/${order.documentId()}');
+    if (order.documentId == null) return OrderTile(ticket: order);
+    return OrderTile(orderPath: 'build/${widget.build.documentId}/orders/${order.documentId}');
   }
 }

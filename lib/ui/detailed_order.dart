@@ -210,8 +210,8 @@ class _DetailedOrderState extends State<DetailedOrder> {
       scrollDirection: Axis.vertical,
       itemBuilder: (context, index) {
         return ItemTile(
-          buildId: widget.build.documentId(),
-          orderId: order.documentId(),
+          buildId: widget.build.documentId,
+          orderId: order.documentId,
           item: items[index],
         );
       },

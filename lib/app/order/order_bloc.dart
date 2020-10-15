@@ -48,7 +48,7 @@ class OrderBloc extends BlocBase {
 
     builds.forEach((element) async {
 
-      orders = await buildRepository.getOrders(element.documentId()).first;
+      orders = await buildRepository.getOrders(element.documentId).first;
       _orders.addAll(orders);
 
       _blocController.sink.add(_orders);
@@ -59,7 +59,7 @@ class OrderBloc extends BlocBase {
   }
 
   void getOrdersByBuild(Build build) async {
-    _buildOrders = await _buildRepository.getOrders(build.documentId()).first;
+    _buildOrders = await _buildRepository.getOrders(build.documentId).first;
     _blocOrdersController.sink.add(_buildOrders);
   }
 

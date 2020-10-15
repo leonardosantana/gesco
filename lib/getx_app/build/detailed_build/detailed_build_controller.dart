@@ -20,11 +20,12 @@ class DetailedBuildController extends GetxController{
 
     var repository = BuildRepository();
 
-    orders.addAll(await repository.getOrders(build.documentId()).first);
+    orders.addAll(await repository.getOrders(build.documentId).first);
 
   }
 
   void newOrder() {
+    Get.close(2);
     Get.to(NewOrderPage(buildObj: build));
   }
 

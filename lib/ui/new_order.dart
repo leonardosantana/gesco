@@ -191,7 +191,7 @@ class _NewOrderState extends State<NewOrder> {
                             MaterialPageRoute(
                                 builder: (context) => DetailedOrder(
                                     build: widget.build,
-                                    orderPath: 'build/${widget.build.documentId()}/orders/${widget.order.documentId()}',
+                                    orderPath: 'build/${widget.build.documentId}/orders/${widget.order.documentId}',
                                 )));
                       });
                     }

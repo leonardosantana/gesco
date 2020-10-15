@@ -5,7 +5,7 @@ import 'package:gesco/shared/base_model.dart';
 
 class Build extends BaseModel{
 
-  String _documentId;
+
 
   String owner;
   String name;
@@ -26,11 +26,8 @@ class Build extends BaseModel{
   Build();
 
   @override
-  String documentId() => _documentId;
-
-  @override
   Build.fromMap(DocumentSnapshot document) {
-    _documentId = document.id;
+    documentId = document.id;
 
     this.owner = document.data()["owner"];
     this.name = document.data()["name"];
@@ -65,7 +62,6 @@ class Build extends BaseModel{
     map['progress'] = this.progress;
     map['phase'] = this.phase;
     map['orderNeedsAproval'] = this.orderNeedsAproval;
-    map['orders'] = this.orders;
     map['ordersNumber'] = this.ordersNumber;
 
     return map;

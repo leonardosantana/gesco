@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,6 +18,7 @@ void main() {
 class Gesco extends StatelessWidget {
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -29,6 +31,7 @@ class Gesco extends StatelessWidget {
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
           User _user = FirebaseAuth.instance.currentUser;
+          FirebaseFirestore.instance.clearPersistence();
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
             getPages: Pages.routes,

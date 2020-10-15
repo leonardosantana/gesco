@@ -15,7 +15,6 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HomePageController controller = Get.put(HomePageController());
-    bool isSelected = true;
 
     Size size = MediaQuery.of(context).size;
     double screenWidth = size.width;
@@ -23,74 +22,79 @@ class HomePage extends StatelessWidget {
 
     return Stack(
       children: <Widget>[
-        Container(
-          child: AnimatedPositioned(
-            duration: Duration(milliseconds: 300),
-            top: isSelected ? 0 : 0.2 * screenHeight,
-            bottom: isSelected ? 0 : 0.2 * screenWidth,
-            left: isSelected ? 0 : 0.6 * screenWidth,
-            right: isSelected ? 0 : -0.4 * screenWidth,
-            child: Container(
-              child: Material(
-                elevation: 8,
-                child: SafeArea(
-                    child: Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          AppHeader(
-                            isMainPage: true,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            vertical: 5.0, horizontal: 10.0),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.4),
-                          borderRadius: BorderRadius.circular(14.0),
-                        ),
-                        child: Row(
+        Obx( (){
+          return         Container(
+            child: AnimatedPositioned(
+              duration: Duration(milliseconds: 300),
+              top: controller.hideMenu.value ? 0 : 0.2 * screenHeight,
+              bottom: controller.hideMenu.value ? 0 : 0.2 * screenWidth,
+              left: controller.hideMenu.value ? 0 : 0.6 * screenWidth,
+              right: controller.hideMenu.value ? 0 : -0.4 * screenWidth,
+              child: Container(
+                child: Material(
+                  elevation: 8,
+                  child: SafeArea(
+                      child: Container(
+                        padding: EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
-                            Icon(Icons.search),
                             SizedBox(
-                              width: 10.0,
+                              height: 20.0,
                             ),
-                            Text(
-                              'Buscar',
-                              style: TextStyle(
-                                  fontSize: 14.0, color: Colors.grey.shade600),
+                            InkWell(
+                              onTap: ( () => controller.changeSelectedMenu()),
+                              child: Row(
+                                children: <Widget>[
+                                  AppHeader(
+                                    isMainPage: true,
+                                  ),
+                                ],
+                              ),
                             ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 5.0, horizontal: 10.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.4),
+                                borderRadius: BorderRadius.circular(14.0),
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(Icons.search),
+                                  SizedBox(
+                                    width: 10.0,
+                                  ),
+                                  Text(
+                                    'Buscar',
+                                    style: TextStyle(
+                                        fontSize: 14.0, color: Colors.grey.shade600),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            Expanded(
+                              child: ListView(
+                                shrinkWrap: true,
+                                padding: EdgeInsets.all(5),
+                                scrollDirection: Axis.vertical,
+                                children: buildHomeScreen(controller),
+                              ),
+                            )
                           ],
                         ),
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Expanded(
-                        child: ListView(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.all(5),
-                          scrollDirection: Axis.vertical,
-                          children: buildHomeScreen(controller),
-                        ),
-                      )
-                    ],
-                  ),
-                )),
+                      )),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        }),
       ],
     );
   }

@@ -5,7 +5,6 @@ import 'package:gesco/shared/base_model.dart';
 import 'item.dart';
 
 class Order extends BaseModel {
-  String _documentId;
 
   Color color;
   String category;
@@ -42,12 +41,10 @@ class Order extends BaseModel {
     return map;
   }
 
-  @override
-  String documentId() => _documentId;
 
   @override
   Order.fromMap(DocumentSnapshot document) {
-    _documentId = document.id;
+    documentId = document.id;
 
     var dataMap = document.data();
 
