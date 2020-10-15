@@ -2,6 +2,8 @@ import 'dart:collection';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/getx_app/build/build_model.dart';
+import 'package:gesco/app/order/order_bloc.dart';
 import 'package:gesco/controller/order_controller.dart';
 import 'package:gesco/controller/user_controller.dart';
 import 'package:gesco/models/order.dart';
@@ -10,12 +12,24 @@ import 'detailed_order.dart';
 
 class OrderTile extends StatefulWidget {
 
-  Order order;
 
-  bool buildPage;
+  String orderPath;
+  Order ticket;
+
+  Future<Order> _order;
+  Future<Build> _build;
+
 
   OrderTile(
-      {@required this.order, @required this.buildPage});
+      {this.orderPath, this.ticket}){
+    OrderBloc orderBloc = OrderBloc();
+
+    if(orderPath != null) {
+      _order = orderBloc.getOrder(orderPath);
+      _build = orderBloc.getBuildbyOrderPath(orderPath);
+    }
+
+  }
 
   @override
   _OrderTileState createState() => _OrderTileState();
@@ -29,7 +43,16 @@ class _OrderTileState extends State<OrderTile> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DetailedOrder(order: widget.order,user: UserController.user)));
+                builder: (context) => FutureBuilder(
+                  future: widget._build,
+                  builder: (context, buildSnap){
+                    if(buildSnap.connectionState == ConnectionState.done) {
+                      return DetailedOrder(
+                        orderPath: widget.orderPath, build: buildSnap.data,);
+                    }
+                    return SizedBox();//TODO loading page
+                  }),
+                ));
       },
       child: Card(
         elevation: 5.0,
@@ -38,59 +61,7 @@ class _OrderTileState extends State<OrderTile> {
           padding: EdgeInsets.all(5.0),
           height: 60.0,
           //color: getColorFromCategory(widget.category).withOpacity(0.5),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    /*Container(
-                      width: 50.0,
-                      height: 50.0,
-                      //color: Colors.white,
-                      child: Image.asset(getImageFromCategory(widget.category)),
-                    ),
-                    SizedBox(
-                      width: 2,
-                    ),*/
-                    Container(
-                      //width: 120.0,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            widget.buildPage ? '${widget.order.buildName} ordem nº${widget.order.id}' :'ordem nº${widget.order.id}',
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w800),
-                          ),
-                          Container(
-                              decoration: BoxDecoration(
-                                color: OrderController.getColorFromStatus(widget.order.status),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 2.0, horizontal: 5),
-                                child: Text(widget.order.status),
-                              )),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Text('Itens: ${widget.order.items.length}'),
-                    ],
-                  ),
-                )
-              ]),
+          child: buildOrder(),
         ),
       ),
     );
@@ -112,6 +83,74 @@ class _OrderTileState extends State<OrderTile> {
     categoryAsset['hydraulic'] = Colors.blue;
 
     return categoryAsset[category];
+  }
+
+  Widget buildOrder() {
+    if(widget.ticket != null)
+      return buildTileOrder(widget.ticket);
+    return FutureBuilder(
+      future: widget._order,
+      builder: (context, orderSnap){
+        Order order = orderSnap.data;
+        return buildTileOrder(order);
+      },
+    );
+
+  }
+
+  Widget buildTileOrder(Order order) {
+    return Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              /*Container(
+                      width: 50.0,
+                      height: 50.0,
+                      //color: Colors.white,
+                      child: Image.asset(getImageFromCategory(widget.category)),
+                    ),
+                    SizedBox(
+                      width: 2,
+                    ),*/
+              Container(
+                //width: 120.0,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      order.orderNumber!= null? 'ordem nº${order.orderNumber}':'nova ordem',
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w800),
+                    ),
+                    Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 2.0, horizontal: 5),
+                          child: Text(''),
+                        )),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                Text('Itens: ${order.quantity}'),
+              ],
+            ),
+          )
+        ]);
   }
 
 

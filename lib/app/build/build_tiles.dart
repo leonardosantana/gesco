@@ -1,16 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/getx_app/build/build_model.dart';
 import 'package:gesco/app/build/new_build/new_build_page.dart';
-import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_model.dart';
+import 'package:gesco/app/order/order_bloc.dart';
 import 'package:gesco/ui/common_styles.dart';
 import 'package:gesco/ui/menu_page.dart';
 
 import '../../ui/detailed_build.dart';
+import 'build_bloc.dart';
 
 class BuildTile extends StatefulWidget {
   Build build;
+  BuildBloc bloc;
+  OrderBloc orderBloc;
 
-  BuildTile({@required this.build});
+  BuildTile({@required this.build, @required this.bloc, @required this.orderBloc});
 
   @override
   _BuildTileState createState() => _BuildTileState();
@@ -29,12 +33,12 @@ class _BuildTileState extends State<BuildTile> {
             : widget.build.color.withOpacity(0.5),
         child: InkWell(
           onTap: () {
-            Navigator.push(
+            Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                     builder: (context) => widget.build == null
-                        ? NewBuildPage()
-                        : DetailedBuild(build: widget.build)));
+                        ? NewBuildPage(bloc: widget.bloc)
+                        : DetailedBuild(build: widget.build, bloc: widget.orderBloc)));
           },
           child: widget.build == null ? buildEmptyTile() : buildDetailed(),
         ),

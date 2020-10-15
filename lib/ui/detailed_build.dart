@@ -1,19 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gesco/controller/order_controller.dart';
-import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_model.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/getx_app/build/build_model.dart';
+import 'package:gesco/app/order/new_order/new_order_page.dart';
+import 'package:gesco/app/order/order_bloc.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/ui/order_tile.dart';
 
 import 'app_header.dart';
 import 'common_styles.dart';
-import 'new_order.dart';
 
 class DetailedBuild extends StatefulWidget {
   Build build;
   bool isSelected = true;
+  OrderBloc bloc;
 
-  DetailedBuild({@required this.build});
+  DetailedBuild({@required this.build, @required this.bloc}) {
+    bloc.getOrdersByBuild(build);
+    bloc.getOrders();
+  }
 
   @override
   _DetailedBuildState createState() => _DetailedBuildState();
@@ -92,7 +96,9 @@ class _DetailedBuildState extends State<DetailedBuild> {
                                         ),
                                         Text(widget.build.cust.toString()),
                                         Text(widget.build.progress.toString()),
-                                        Text(widget.build.phase==null?'':widget.build.phase),
+                                        Text(widget.build.phase == null
+                                            ? ''
+                                            : widget.build.phase),
                                       ],
                                     ),
                                   ],
@@ -112,8 +118,9 @@ class _DetailedBuildState extends State<DetailedBuild> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        NewOrder(build: widget.build)));
+                                    builder: (context) => NewOrderPage(
+                                        build: widget.build,
+                                        bloc: widget.bloc)));
                           },
                           child: Text(
                             'Nova solicitação',
@@ -134,17 +141,25 @@ class _DetailedBuildState extends State<DetailedBuild> {
                       SizedBox(
                         height: 10.0,
                       ),
-                      ListView.builder(
-                        itemCount: widget.build.orders==null?0: widget.build.orders.length,
-                        shrinkWrap: true,
-                        physics: ClampingScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              OrderTile(order: widget.build.orders[index], buildPage: false,)
-                            ],
+                      StreamBuilder(
+                        stream: widget.bloc.buildOrdersStream,
+                        builder: (context, ordersSnap) {
+                          if (ordersSnap.connectionState !=
+                              ConnectionState.active) return SizedBox();
+                          List<Order> orders = ordersSnap.data;
+                          return ListView.builder(
+                            itemCount: orders == null ? 0 : orders.length,
+                            shrinkWrap: true,
+                            physics: ClampingScrollPhysics(),
+                            scrollDirection: Axis.vertical,
+                            itemBuilder: (context, index) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: <Widget>[
+                                  buildOrderTile(orders[index])
+                                ],
+                              );
+                            },
                           );
                         },
                       ),
@@ -156,5 +171,9 @@ class _DetailedBuildState extends State<DetailedBuild> {
       ),
     );
   }
-}
 
+  OrderTile buildOrderTile(Order order) {
+    if (order.documentId == null) return OrderTile(ticket: order);
+    return OrderTile(orderPath: 'build/${widget.build.documentId}/orders/${order.documentId}');
+  }
+}

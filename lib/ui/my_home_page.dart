@@ -2,14 +2,15 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gesco/controller/build_controller.dart';
-import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_model.dart';
+import 'package:gesco/app/build/build_bloc.dart';
+import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/getx_app/build/build_model.dart';
+import 'package:gesco/app/build/build_tiles.dart';
+import 'package:gesco/app/order/order_bloc.dart';
 import 'package:gesco/models/order.dart';
-import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/app/build/build_tile_page.dart';
-import 'package:gesco/ui/order_tile.dart';
 
 import 'app_header.dart';
 import 'common_styles.dart';
+import 'order_tile.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -21,18 +22,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  BuildBloc bloc = BuildBloc();
+  OrderBloc blocOrders = OrderBloc();
+
   double screenWidth;
   double screenHeight;
 
   @override
   Widget build(BuildContext context) {
-    Future<List<Build>> buildings = new BuildController().getBuilding();
-    List<Order> tickects = List<Order>();
 
-    /*buildings.forEach((item) {
-      if (item.orders != null && item.orders.length > 0)
-        tickects.addAll(item.orders);
-    });*/
+    bloc.getBuilding();
+    blocOrders.getOrders();
 
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
@@ -115,24 +116,30 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             Container(
                                 height: 220,
-                                child: FutureBuilder(
+                                child: StreamBuilder<List<Build>>(
+                                  stream: bloc.buildsStream,
                                   builder: (context, builderSnap){
-                                    if(builderSnap.connectionState == ConnectionState.none && builderSnap.hasData == null)
-                                      return BuildTile(build: null);
+                                    if(builderSnap.connectionState != ConnectionState.active )
+                                      return SizedBox();
+                                    List<Build> builds = builderSnap.data;
+                                    if(builds == null)
+                                      builds = List<Build>();
                                     return ListView.builder(
-                                      itemCount: builderSnap.data.length + 1,
+                                      itemCount: builds.length + 1,
                                       shrinkWrap: true,
                                       physics: ClampingScrollPhysics(),
                                       scrollDirection: Axis.horizontal,
                                       itemBuilder: (context, index) {
                                         return BuildTile(
-                                            build: index == builderSnap.data.length
+                                            build: index == builds.length
                                                 ? null
-                                                : builderSnap.data[index]);
+                                                : builds[index],
+                                          bloc: bloc,
+                                          orderBloc: blocOrders
+                                        );
                                       },
                                     );
                                   },
-                                  future: buildings,
                                 )),
                             SizedBox(
                               height: 20.0,
@@ -144,21 +151,28 @@ class _MyHomePageState extends State<MyHomePage> {
                             SizedBox(
                               height: 10.0,
                             ),
-                            ListView.builder(
-                              itemCount: tickects.length,
-                              shrinkWrap: true,
-                              physics: ClampingScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              itemBuilder: (context, index) {
-                                return Column(
-                                  crossAxisAlignment:
+                            StreamBuilder(
+                              stream: blocOrders.ordersStream,
+                              builder: (context, ordersSnap){
+                                if(ordersSnap.connectionState != ConnectionState.active )
+                                  return SizedBox();
+
+                                List<Order> tickects = ordersSnap.data;
+
+                                return ListView.builder(
+                                  itemCount: tickects.length,
+                                  shrinkWrap: true,
+                                  physics: ClampingScrollPhysics(),
+                                  scrollDirection: Axis.vertical,
+                                  itemBuilder: (context, index) {
+                                    return Column(
+                                      crossAxisAlignment:
                                       CrossAxisAlignment.stretch,
-                                  children: <Widget>[
-                                    OrderTile(
-                                      order: tickects[index],
-                                      buildPage: true,
-                                    )
-                                  ],
+                                      children: <Widget>[
+                                        OrderTile(ticket: tickects[index],)
+                                      ],
+                                    );
+                                  },
                                 );
                               },
                             ),

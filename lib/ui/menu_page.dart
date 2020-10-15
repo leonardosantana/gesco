@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -61,6 +64,27 @@ class MenuPage extends StatelessWidget {
                   style: textStyle,
                 ),
               ],
+            ),
+            boxSpaceVertical,
+            InkWell(
+              onTap: () async {
+                await FirebaseAuth.instance.signOut().whenComplete(() {
+                  new Future.delayed(const Duration(seconds: 5), () => exit(0));
+                });
+              },
+              child: Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.exit_to_app,
+                    color: Colors.white,
+                  ),
+                  boxSpaceHorizontal,
+                  Text(
+                    'Sair',
+                    style: textStyle,
+                  ),
+                ],
+              ),
             ),
           ],
         ),

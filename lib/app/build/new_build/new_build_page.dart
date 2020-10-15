@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:gesco/app/build/new_build/new_build_bloc.dart';
+import 'package:gesco/app/build/build_bloc.dart';
 import 'package:gesco/ui/app_header.dart';
 import 'package:gesco/utils/common_validator.dart';
 
 class NewBuildPage extends StatefulWidget {
+
+  BuildBloc bloc;
   final String title;
-  const NewBuildPage({Key key, this.title = "NewBuild"}) : super(key: key);
+  NewBuildPage({Key key, this.title = "NewBuild", @required this.bloc}) : super(key: key);
 
   @override
   _NewBuildPageState createState() => _NewBuildPageState();
@@ -20,8 +22,6 @@ class _NewBuildPageState extends State<NewBuildPage> {
   String _phase;
   double _buildSize;
   bool _engineerSwitch = false;
-
-  NewBuildBloc bloc = new NewBuildBloc();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -91,8 +91,8 @@ class _NewBuildPageState extends State<NewBuildPage> {
   }
 
   saveBuild(){
-    if(bloc.formValidate(_formKey)){
-      bloc.saveBuild(_name, _address, _buildSize, _zipCode, _builder, _engineer, _engineerSwitch, _phase, context);
+    if(widget.bloc.formValidate(_formKey)){
+      widget.bloc.saveBuild(_name, _address, _buildSize, _zipCode, _builder, _engineer, _engineerSwitch, _phase, context);
     }
 
   }
@@ -123,8 +123,8 @@ class _NewBuildPageState extends State<NewBuildPage> {
         hintText: 'Insira o usuário do engenheiro',
         labelText: 'Engenheiro',
       ),
-      onSaved: (value) => _engineer = bloc.getUserId(value),
-      validator: (value) => bloc.validateUser(value, "usuario informado não é valido"),
+      onSaved: (value) => _engineer = widget.bloc.getUserId(value),
+      validator: (value) => widget.bloc.validateUser(value, "usuario informado não é valido"),
     );
   }
 
@@ -135,7 +135,7 @@ class _NewBuildPageState extends State<NewBuildPage> {
         hintText: 'Insira em que etapa a obra esta',
         labelText: 'Etapa',
       ),
-      onSaved: (value) => _phase = bloc.getUserId(value),
+      onSaved: (value) => _phase = widget.bloc.getUserId(value),
       validator: (value) => CommonValidator.validateEmptyString(value) ? "etapa é necessario": null,
     );
   }
@@ -147,8 +147,8 @@ class _NewBuildPageState extends State<NewBuildPage> {
         hintText: 'Insira o usuário do mestre de obras ',
         labelText: 'Mestre de obra *',
       ),
-      onSaved: (value) => _builder = bloc.getUserId(value),
-      validator: (value) => bloc.validateUser(value, "usuario informado não é valido"),
+      onSaved: (value) => _builder = widget.bloc.getUserId(value),
+      validator: (value) => widget.bloc.validateUser(value, "usuario informado não é valido"),
     );
   }
 
@@ -160,7 +160,7 @@ class _NewBuildPageState extends State<NewBuildPage> {
         labelText: 'CEP *',
       ),
       onSaved: (value) => _zipCode = value,
-      validator: (value) => bloc.validateIsNull(value, "informe um cep"),
+      validator: (value) => widget.bloc.validateIsNull(value, "informe um cep"),
     );
   }
 
@@ -173,7 +173,7 @@ class _NewBuildPageState extends State<NewBuildPage> {
         labelText: 'Endereço *',
       ),
       onSaved: (value) => _address = value,
-      validator: (value) => bloc.validateIsNull(value, "Informe um endereço"),
+      validator: (value) => widget.bloc.validateIsNull(value, "Informe um endereço"),
     );
   }
 
@@ -187,7 +187,7 @@ class _NewBuildPageState extends State<NewBuildPage> {
       ),
       onSaved: (value) => _name = value,
       validator: (value) =>
-          bloc.validateIsNull(value, 'Informe um nome para obra'),
+          widget.bloc.validateIsNull(value, 'Informe um nome para obra'),
     );
   }
 
@@ -199,7 +199,7 @@ class _NewBuildPageState extends State<NewBuildPage> {
         labelText: 'Tamanho *',
       ),
       validator: (value) =>
-          bloc.validateIsNull(value, 'Informe o tamanho da obra'),
+          widget.bloc.validateIsNull(value, 'Informe o tamanho da obra'),
       onSaved: (value) => _buildSize = double.parse(value),
       keyboardType: TextInputType.number,
     );
