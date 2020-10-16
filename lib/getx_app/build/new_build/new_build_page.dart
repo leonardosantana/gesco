@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gesco/getx_app/build/new_build/new_build_controller.dart';
+import 'package:gesco/getx_app/home_page/home_page.dart';
 import 'package:gesco/ui/app_header.dart';
 import 'package:gesco/utils/common_validator.dart';
 import 'package:get/get.dart';
@@ -24,7 +25,7 @@ class NewBuildPage extends StatelessWidget {
                 children: <Widget>[
                   InkWell(
                     onTap: () {
-                      Get.back();
+                      Get.to(HomePage());
                     },
                     child: AppHeader(isMainPage: false),
                   ),

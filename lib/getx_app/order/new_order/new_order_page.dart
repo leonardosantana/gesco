@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gesco/controller/order_controller.dart';
 import 'package:gesco/getx_app/build/build_model.dart';
+import 'package:gesco/getx_app/build/detailed_build/detailed_build_page.dart';
+import 'package:gesco/getx_app/home_page/home_page.dart';
 import 'package:gesco/getx_app/order/new_order/new_order_controller.dart';
 import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/category.dart';
@@ -45,8 +47,7 @@ class NewOrderPage extends GetView<NewOrderController> {
                         children: <Widget>[
                           InkWell(
                             onTap: () {
-                              Get.close(1);
-                              Get.reset();
+                              Get.to(HomePage());
                             },
                             child: AppHeader(isMainPage: false),
                           ),

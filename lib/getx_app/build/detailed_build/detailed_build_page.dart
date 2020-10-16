@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gesco/app/build/new_build/new_build_page.dart';
 import 'package:gesco/controller/order_controller.dart';
 import 'package:gesco/getx_app/build/detailed_build/detailed_build_controller.dart';
+import 'package:gesco/getx_app/home_page/home_page.dart';
 import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/ui/app_header.dart';
@@ -45,7 +46,7 @@ class DetailedBuildPage extends StatelessWidget {
                 children: <Widget>[
                   InkWell(
                     onTap: () {
-                      Get.back();
+                      Get.to(HomePage());
                     },
                     child: AppHeader(isMainPage: false),
                   ),
