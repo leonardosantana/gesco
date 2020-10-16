@@ -3,13 +3,14 @@ import 'package:gesco/controller/order_controller.dart';
 import 'package:gesco/getx_app/build/build_model.dart';
 import 'package:gesco/getx_app/build/detailed_build/detailed_build_page.dart';
 import 'package:gesco/getx_app/build/new_build/new_build_page.dart';
+import 'package:gesco/getx_app/order/detailed_order/detailed_order_page.dart';
 import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/ui/app_header.dart';
 import 'package:gesco/ui/common_styles.dart';
 import 'package:get/get.dart';
 
-import 'home_page_controller.dart';
+import 'home_controller.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -251,7 +252,7 @@ class HomePage extends StatelessWidget {
   orderTile({Order ticket}) {
     return InkWell(
       onTap: () {
-        //Get.to(DetailedOrder( ticket));
+        Get.to(DetailedOrderPage(orderPath: ticket.path));
       },
       child: Card(
         elevation: 5.0,

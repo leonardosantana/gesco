@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/form.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:gesco/app/build/build_repository.dart';
-import 'package:gesco/getx_app/home_page/home_page_controller.dart';
+import 'package:gesco/getx_app/home_page/home_controller.dart';
 import 'package:gesco/ui/application_page.dart';
 import 'package:get/get.dart';
 

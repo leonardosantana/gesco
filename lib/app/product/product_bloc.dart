@@ -5,6 +5,5 @@ import 'package:gesco/models/product.dart';
 class ProductBloc extends BlocBase {
   ProductRepository _repository = ProductRepository();
 
-  Future<Product> getProduct(String productId) =>
-      _repository.getProduct(productId);
+  Future<Product> getProduct(String productId) => null;
 }

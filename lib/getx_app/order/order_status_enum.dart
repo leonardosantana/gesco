@@ -1,7 +1,8 @@
 import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
-enum OrderStatusEnum{
+enum OrderStatusEnum {
   CRIANDO,
   APROVACAO_PENDENTE,
   AGUARDANDO_COMPRA,
@@ -11,8 +12,6 @@ enum OrderStatusEnum{
 }
 
 class OrderStatus {
-
-
   static getStatusFromEnum(OrderStatusEnum status) {
     Map<OrderStatusEnum, String> statusString = Map();
 
@@ -38,6 +37,4 @@ class OrderStatus {
 
     return categoryAsset[status];
   }
-
-
 }

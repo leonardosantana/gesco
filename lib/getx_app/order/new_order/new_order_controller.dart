@@ -68,6 +68,7 @@ class NewOrderController extends GetxController {
   saveOrder() {
     print('saving order in ${_build.documentId}');
     order.value.quantity = items.length;
+    order.value.category = category.value.documentId;
     _build.ordersNumber++;
     order.value.status = OrderStatusEnum.APROVACAO_PENDENTE.index;
 
