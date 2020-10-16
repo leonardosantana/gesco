@@ -209,11 +209,7 @@ class _DetailedOrderState extends State<DetailedOrder> {
       physics: ClampingScrollPhysics(),
       scrollDirection: Axis.vertical,
       itemBuilder: (context, index) {
-        return ItemTile(
-          buildId: widget.build.documentId,
-          orderId: order.documentId,
-          item: items[index],
-        );
+        return Container();//itemTile(items[index]);
       },
     );
   }
@@ -465,4 +461,8 @@ class _DetailedOrderState extends State<DetailedOrder> {
       ),
     );
   }
-}
+
+
+
+  }
+

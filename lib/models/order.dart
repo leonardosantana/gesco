@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/shared/base_model.dart';
 
+import 'category.dart';
 import 'item.dart';
 
 class Order extends BaseModel {
 
   Color color;
   String category;
+  Category categoryObj;
   int status;
   String buildName;
   int quantity;
@@ -49,6 +51,7 @@ class Order extends BaseModel {
     var dataMap = document.data();
 
     this.cust = dataMap["cust"];
+    this.category = dataMap["category"];
     this.color = Colors.red; //document.data()["color"];
     this.status = dataMap["status"];
     this.quantity = dataMap["quantity"];

@@ -7,11 +7,15 @@ import 'package:gesco/models/order.dart';
 import '../../getx_app/build/build_model.dart';
 
 class BuildRepository extends Disposable {
+  static var ordersCollectionPath = 'orders';
+  static var buildCollerctionPath = 'build';
+  static var itemsCollectionPath = 'items';
+
   User _user = FirebaseAuth.instance.currentUser;
   String _buildId;
 
   CollectionReference _collection =
-      FirebaseFirestore.instance.collection('build');
+      FirebaseFirestore.instance.collection(buildCollerctionPath);
 
   Future<String> add(Build build) {
     return _collection
@@ -26,38 +30,40 @@ class BuildRepository extends Disposable {
   void updateOrder(String buildId, Order order) {
     _collection
         .doc(buildId)
-        .collection('orders')
+        .collection(ordersCollectionPath)
         .doc(order.documentId)
         .update(order.toMap());
 
     order.items.where((element) => element.getId() == null).forEach((element) {
       _collection
           .doc(buildId)
-          .collection('orders')
+          .collection(ordersCollectionPath)
           .doc(order.documentId)
-          .collection('items')
+          .collection(itemsCollectionPath)
           .add(element.toMap());
     });
   }
 
-  Future<String> addOrder(String documentId, Order order) => _collection
-          .doc(documentId)
-          .collection('orders')
-          .add(order.toMap())
-          .then((value) {
-        order.items.forEach((element) {
-          value
-              .collection('items')
-              .add(element.toMap())
-              .then((value) => print('sucess'))
-              .catchError((error) {
-            print("Failed to add item: $error");
-          });
+  Future<String> addOrder(String documentId, Order order) {
+    return _collection
+        .doc(documentId)
+        .collection(ordersCollectionPath)
+        .add(order.toMap())
+        .then((value) {
+      order.items.forEach((element) {
+        value
+            .collection(itemsCollectionPath)
+            .add(element.toMap())
+            .then((value) => print('sucess'))
+            .catchError((error) {
+          print("Failed to add item: $error");
         });
-        return value.id;
-      }).catchError((error) {
-        print("Failed to add order: $error");
       });
+      return value.id;
+    }).catchError((error) {
+      print("Failed to add order: $error");
+    });
+  }
 
   void delete(String documentId) => _collection.doc(documentId).delete();
 
@@ -77,10 +83,12 @@ class BuildRepository extends Disposable {
     this._buildId = id;
     return _collection
         .doc(id)
-        .collection('orders')
+        .collection(ordersCollectionPath)
         .snapshots()
         .map((query) => query.docs.map<Order>((document) {
               Order order = Order.fromMap(document);
+              order.path =
+                  '/${buildCollerctionPath}/${id}/${ordersCollectionPath}/${document.id}';
               getItems(document)
                   .listen((eventResult) => order.items = eventResult);
               return order;
@@ -89,11 +97,18 @@ class BuildRepository extends Disposable {
 
   Stream<List<Item>> getItems(QueryDocumentSnapshot document) => _collection
       .doc(_buildId)
-      .collection('orders')
+      .collection(ordersCollectionPath)
       .doc(document.id)
-      .collection('items')
+      .collection(itemsCollectionPath)
       .snapshots()
       .map((event) => event.docs.map<Item>((e) => Item.fromMap(e)).toList());
+
+  Stream<List<Item>> getItemsbyOrderPath(String itemsPath) {
+    FirebaseFirestore.instance
+        .collection(itemsPath)
+        .snapshots()
+        .map((event) => event.docs.map<Item>((e) => Item.fromMap(e)).toList());
+  }
 
   Future<Order> getOrder(String documentPath) async {
     DocumentSnapshot document =
@@ -114,7 +129,7 @@ class BuildRepository extends Disposable {
   Future<List<Item>> getItemsByPath(String orderPath) =>
       FirebaseFirestore.instance
           .doc(orderPath)
-          .collection('items')
+          .collection(itemsCollectionPath)
           .snapshots()
           .map((event) => event.docs.map<Item>((e) => Item.fromMap(e)).toList())
           .first;

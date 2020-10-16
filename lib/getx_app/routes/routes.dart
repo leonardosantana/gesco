@@ -4,4 +4,5 @@ abstract class Routes{
   static const DETAILED_BUILD = '/build';
   static const NEW_BUILD = '/newBuild';
   static const NEW_ORDER = '/newOrder';
+  static const DETAILED_ORDER = '/detailedOrder';
 }
