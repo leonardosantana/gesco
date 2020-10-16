@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/controller/order_controller.dart';
 import 'package:gesco/getx_app/build/build_model.dart';
@@ -13,9 +14,11 @@ import 'package:get/get.dart';
 import 'home_controller.dart';
 
 class HomePage extends StatelessWidget {
+
+  HomePageController controller = Get.put(HomePageController());
+
   @override
   Widget build(BuildContext context) {
-    HomePageController controller = Get.put(HomePageController());
 
     Size size = MediaQuery.of(context).size;
     double screenWidth = size.width;
@@ -85,7 +88,7 @@ class HomePage extends StatelessWidget {
                                 shrinkWrap: true,
                                 padding: EdgeInsets.all(5),
                                 scrollDirection: Axis.vertical,
-                                children: buildHomeScreen(controller),
+                                children: buildHomeScreen(),
                               ),
                             )
                           ],
@@ -100,7 +103,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  List<Widget> buildHomeScreen(HomePageController controller) {
+  List<Widget> buildHomeScreen() {
     return <Widget>[
       Text(
         'Obras',
@@ -109,7 +112,7 @@ class HomePage extends StatelessWidget {
       SizedBox(
         height: 10.0,
       ),
-      Container(height: 220, child: buildsListView(controller)),
+      Container(height: 220, child: buildsListView()),
       SizedBox(
         height: 20.0,
       ),
@@ -120,11 +123,11 @@ class HomePage extends StatelessWidget {
       SizedBox(
         height: 10.0,
       ),
-      ordersListView(controller)
+      ordersListView()
     ];
   }
 
-  Widget ordersListView(HomePageController controller) {
+  Widget ordersListView() {
     return Obx(() => ListView.builder(
           itemCount: controller.orders.length,
           shrinkWrap: true,
@@ -139,7 +142,7 @@ class HomePage extends StatelessWidget {
         ));
   }
 
-  Container buildsListView(HomePageController controller) {
+  Container buildsListView() {
     return Container(
       child: Obx(() => ListView.builder(
             itemCount: controller.builds.length + 1,
@@ -217,9 +220,28 @@ class HomePage extends StatelessWidget {
       children: <Widget>[
         Container(
           height: 120,
-          child: Image(
-            fit: BoxFit.fill,
-            image: NetworkImage(build.buildImage),
+          child: Stack(
+            children: [
+              Image(
+                fit: BoxFit.fill,
+                image: NetworkImage(build.buildImage),
+              ),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      padding: EdgeInsets.all(5),
+                      margin: EdgeInsets.only(top: 5, right: 5),
+                      child:
+                    Text(controller.getUserBuildRole(build),),
+                    )
+                  ],
+                ),
+            ],
           ),
         ),
         Container(
@@ -228,9 +250,14 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                build.name,
-                style: CommonStyles.TileTextStyle(size: 16.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    build.name,
+                    style: CommonStyles.TileTextStyle(size: 16.0),
+                  ),
+                ],
               ),
               Text(
                 build.cust.toString(),
@@ -252,6 +279,7 @@ class HomePage extends StatelessWidget {
   orderTile({Order ticket}) {
     return InkWell(
       onTap: () {
+        Get.reset();
         Get.to(DetailedOrderPage(orderPath: ticket.path));
       },
       child: Card(

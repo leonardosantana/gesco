@@ -3,7 +3,6 @@ import 'package:gesco/app/build/build_repository.dart';
 import 'package:gesco/app/product/category_repository.dart';
 import 'package:gesco/getx_app/build/build_model.dart';
 import 'package:gesco/getx_app/build/detailed_build/detailed_build_controller.dart';
-import 'package:gesco/getx_app/home_page/home_page.dart';
 import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/category.dart';
 import 'package:gesco/models/item.dart';
@@ -70,13 +69,16 @@ class NewOrderController extends GetxController {
     order.value.quantity = items.length;
     order.value.category = category.value.documentId;
     _build.ordersNumber++;
-    order.value.status = OrderStatusEnum.APROVACAO_PENDENTE.index;
+    order.value.status = _build.orderNeedsAproval
+        ? OrderStatusEnum.APROVACAO_PENDENTE.index
+        : OrderStatusEnum.AGUARDANDO_COMPRA.index;
 
     _buildRepository.addOrder(_build.documentId, order.value).then((value) {
       print('order added with id ${value}');
       _buildRepository.update(_build.documentId, _build).then((value) {
-        DetailedBuildController buildController =
-            Get.put(DetailedBuildController(build: _build), tag: _build.documentId);
+        DetailedBuildController buildController = Get.put(
+            DetailedBuildController(build: _build),
+            tag: _build.documentId);
         buildController.orders.add(order.value);
         buildController.build = _build;
 

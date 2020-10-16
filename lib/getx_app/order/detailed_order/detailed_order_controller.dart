@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/app/build/build_repository.dart';
 import 'package:gesco/app/product/product_repository.dart';
+import 'package:gesco/controller/user_controller.dart';
+import 'package:gesco/getx_app/home_page/home_controller.dart';
+import 'package:gesco/getx_app/home_page/home_page.dart';
 import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/category.dart';
 import 'package:gesco/models/item.dart';
@@ -13,6 +17,7 @@ class DetailedOrderController extends GetxController {
   Rx<Order> order = Order().obs;
   List<Item> items = List<Item>().obs;
   List<Product> products = List<Product>().obs;
+  String user = FirebaseAuth.instance.currentUser.email;
 
   Rx<Category> category = Category().obs;
 
@@ -21,6 +26,8 @@ class DetailedOrderController extends GetxController {
         .then((value) => initializeProducts())
         .then((value) => initilizeCategory()));
   }
+
+  String get buildId => orderPath.substring(orderPath.indexOf('build/')+6 , orderPath.indexOf('/orders'));
 
   Future initializeOrder() async {
     order.value = await BuildRepository().getOrder(orderPath);
@@ -42,8 +49,9 @@ class DetailedOrderController extends GetxController {
   Widget actionFromStatus(OrderStatusEnum status) {
     switch (status) {
       case OrderStatusEnum.APROVACAO_PENDENTE:
-      case OrderStatusEnum.AGUARDANDO_COMPRA:
         return getButtonModifyOrder(order.value);
+      case OrderStatusEnum.AGUARDANDO_COMPRA:
+        return getButtonBuyedOrder(order.value);
       case OrderStatusEnum.AGUARDANDO_ENTREGA:
         return getButtonCheckDelivery(order.value);
       case OrderStatusEnum.ENTREGUE:
@@ -77,7 +85,10 @@ class DetailedOrderController extends GetxController {
             color: Colors.blueAccent,
           ),
           child: FlatButton(
-            onPressed: () {},
+            onPressed: () {
+              order.status = OrderStatusEnum.AGUARDANDO_COMPRA.index;
+              updateOrderAndGoToHome(order);
+            },
             child: Text(
               'Aprovar pedido',
               style: TextStyle(
@@ -230,5 +241,30 @@ class DetailedOrderController extends GetxController {
   }
 
   getProduct(String productId) => products.firstWhere((element) => element.documentId == productId);
+
+  Widget getButtonBuyedOrder(Order order) {
+    return Container(
+      margin: EdgeInsets.all(5),
+      decoration: BoxDecoration(
+        color: Colors.blueAccent,
+      ),
+      child: FlatButton(
+        onPressed: () {
+          order.status = OrderStatusEnum.AGUARDANDO_ENTREGA.index;
+          updateOrderAndGoToHome(order);
+        },
+        child: Text(
+          'Compra efetuada',
+          style: TextStyle(
+              fontSize: 20.0, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+
+  void updateOrderAndGoToHome(Order order) {
+    BuildRepository().updateOrderStatus(buildId, order);
+    Get.to(HomePage());
+  }
 
 }

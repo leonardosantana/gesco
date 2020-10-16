@@ -26,7 +26,6 @@ class DetailedBuildController extends GetxController{
   }
 
   void newOrder() {
-    Get.close(2);
     Get.to(NewOrderPage(buildObj: build));
   }
 
