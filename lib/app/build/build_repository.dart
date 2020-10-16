@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/order.dart';
+import 'package:async/async.dart' show StreamGroup;
 
 import '../../getx_app/build/build_model.dart';
 
@@ -67,7 +68,8 @@ class BuildRepository extends Disposable {
 
   void delete(String documentId) => _collection.doc(documentId).delete();
 
-  Stream<List<Build>> get builds => _collection
+  Stream<List<Build>> get builds {
+    Stream<List<Build>> ownerBuilds = _collection
       .where('owner', isEqualTo: _user.email)
       .snapshots()
       .map((query) => query.docs.map<Build>((document) {
@@ -75,6 +77,26 @@ class BuildRepository extends Disposable {
             getOrders(document.id).listen((event) => build.orders = event);
             return build;
           }).toList());
+    Stream<List<Build>> engineerBuilds = _collection
+        .where('engineer', isEqualTo: _user.email)
+        .snapshots()
+        .map((query) => query.docs.map<Build>((document) {
+      Build build = Build.fromMap(document);
+      getOrders(document.id).listen((event) => build.orders = event);
+      return build;
+    }).toList());
+
+    Stream<List<Build>> builderBuilds = _collection
+        .where('builder', isEqualTo: _user.email)
+        .snapshots()
+        .map((query) => query.docs.map<Build>((document) {
+      Build build = Build.fromMap(document);
+      getOrders(document.id).listen((event) => build.orders = event);
+      return build;
+    }).toList());
+
+    return StreamGroup.merge([ownerBuilds, engineerBuilds,builderBuilds]);
+  }
 
   @override
   void dispose() {}

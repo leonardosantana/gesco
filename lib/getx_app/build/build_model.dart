@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/shared/base_model.dart';
 
-class Build extends BaseModel{
-
-
-
+class Build extends BaseModel {
   String owner;
   String name;
   String builder;
@@ -47,7 +44,6 @@ class Build extends BaseModel{
 
   @override
   toMap() {
-
     var map = new Map<String, dynamic>();
 
     map['owner'] = this.owner;
@@ -65,6 +61,5 @@ class Build extends BaseModel{
     map['ordersNumber'] = this.ordersNumber;
 
     return map;
-
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:gesco/app/build/build_repository.dart';
 import 'package:gesco/getx_app/home_page/home_controller.dart';
 import 'package:gesco/ui/application_page.dart';
+import 'package:gesco/utils/common_validator.dart';
 import 'package:get/get.dart';
 
 import '../build_model.dart';
@@ -20,6 +21,18 @@ class NewBuildController extends GetxController {
   Rx<TextEditingController> addressController = TextEditingController().obs;
   Rx<TextEditingController> nameController = TextEditingController().obs;
   Rx<TextEditingController> sizeController = TextEditingController().obs;
+
+  NewBuildController() {phaseController.value.text = items[0];}
+
+  List<String> get items => [
+    'Preliminares',
+    'Estrutura',
+    'Alvenaria',
+    'Hidráulica/Elétrica',
+    'Complementares',
+    'Cobertura',
+    'Acabamento'
+  ];
 
   bool formValidate(GlobalKey<FormState> formKey) => true;
 
@@ -57,4 +70,20 @@ class NewBuildController extends GetxController {
   }
 
   validateUser(String value, String s) => true;
+
+  validateEngineer(String value) {
+    if(CommonValidator.validateEmail(value))
+        return 'informe um email válido';
+    if(value == builderController.value.text)
+      return 'o engenheiro não pode ser igual ao construtor';
+    return null;
+  }
+
+  validateBuilder(String value) {
+    if(CommonValidator.validateEmail(value))
+      return 'informe um email válido';
+    if(value == engineerController.value.text)
+      return 'o construtor não pode ser igual ao engenheiro';
+    return null;
+  }
 }
