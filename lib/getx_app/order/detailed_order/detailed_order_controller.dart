@@ -12,12 +12,14 @@ class DetailedOrderController extends GetxController {
   String orderPath;
   Rx<Order> order = Order().obs;
   List<Item> items = List<Item>().obs;
+  List<Product> products = List<Product>().obs;
 
   Rx<Category> category = Category().obs;
 
   DetailedOrderController(this.orderPath) {
-    initializeOrder().then(
-        (value) => initializeItems().then((value) => initializeProducts()).then((value) => initilizeCategory()));
+    initializeOrder().then((value) => initializeItems()
+        .then((value) => initializeProducts())
+        .then((value) => initilizeCategory()));
   }
 
   Future initializeOrder() async {
@@ -210,7 +212,6 @@ class DetailedOrderController extends GetxController {
     );
   }
 
-
   Future initializeItems() async {
     items.clear();
     items.addAll(await BuildRepository().getItemsByPath(orderPath));
@@ -218,12 +219,16 @@ class DetailedOrderController extends GetxController {
 
   initializeProducts() {
     items.forEach((element) async {
-      element.product =
-          (await ProductRepository().getProduct(order.value.category, element.productId));
+      products.add(await ProductRepository()
+          .getProduct(order.value.category, element.productId));
     });
   }
 
   Future initilizeCategory() async {
-    category.value = await ProductRepository().getCategory(order.value.category);
+    category.value =
+        await ProductRepository().getCategory(order.value.category);
   }
+
+  getProduct(String productId) => products.firstWhere((element) => element.documentId == productId);
+
 }

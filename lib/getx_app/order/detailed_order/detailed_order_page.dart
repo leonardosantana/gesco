@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gesco/getx_app/order/detailed_order/detailed_order_controller.dart';
-import 'package:gesco/models/item.dart';
 import 'package:gesco/ui/app_header.dart';
 import 'package:gesco/ui/common_styles.dart';
 import 'package:get/get.dart';
@@ -122,13 +121,13 @@ class DetailedOrderPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Obx(
-                      () {
-                        if (controller.order.value == null || controller.order.value.status == null)
-                          return Container();
-                        return controller.actionFromStatus(OrderStatusEnum
-                            .values[controller.order.value.status]);
-                      }),
+                    Obx(() {
+                      if (controller.order.value == null ||
+                          controller.order.value.status == null)
+                        return Container();
+                      return controller.actionFromStatus(OrderStatusEnum
+                          .values[controller.order.value.status]);
+                    }),
                   ],
                 ),
               ),
@@ -162,14 +161,14 @@ class DetailedOrderPage extends StatelessWidget {
   }
 
   Widget buildProductName(int item) {
-    return Obx((){
-      if(controller.items[item].product == null || controller.items[item].product.name == null)
-        return Text('');
-      return Text(controller.items[item].product.name);
-    } );
+    return Obx(() {
+      return controller.products.length == 0 ? CircularProgressIndicator() :
+       Text(controller.getProduct(controller.items[item].productId).name);
+    });
   }
 
   Widget itemTile(int index) {
+
     return Container(
       padding: EdgeInsets.all(5.0),
       child: Row(
@@ -177,7 +176,7 @@ class DetailedOrderPage extends StatelessWidget {
         children: <Widget>[
           Column(
             children: <Widget>[
-              buildProductName(index), //
+            buildProductName(index),
             ],
           ),
           Column(children: <Widget>[

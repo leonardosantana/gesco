@@ -157,6 +157,7 @@ class _LoginPageState extends State<LoginPage> {
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20),
       child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
         validator: (input) => bloc.validateLogin(input),
         onSaved: (input) => _login = input,
         decoration: InputDecoration(

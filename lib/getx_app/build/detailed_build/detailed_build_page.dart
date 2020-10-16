@@ -161,6 +161,7 @@ class DetailedBuildPage extends StatelessWidget {
   Widget buildOrderTile(Order order) {
     return InkWell(
       onTap: () {
+        controller.goToDetailedOrder(order);
 
       },
       child: Card(

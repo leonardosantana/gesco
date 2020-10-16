@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:gesco/app/build/build_repository.dart';
+import 'package:gesco/getx_app/order/detailed_order/detailed_order_page.dart';
 import 'package:gesco/getx_app/order/new_order/new_order_page.dart';
 import 'package:gesco/models/order.dart';
 import 'package:get/get.dart';
@@ -27,6 +28,10 @@ class DetailedBuildController extends GetxController{
   void newOrder() {
     Get.close(2);
     Get.to(NewOrderPage(buildObj: build));
+  }
+
+  void goToDetailedOrder(Order order) {
+    Get.to(DetailedOrderPage(orderPath: order.path));
   }
 
 
