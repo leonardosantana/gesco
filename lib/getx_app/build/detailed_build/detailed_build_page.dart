@@ -6,6 +6,7 @@ import 'package:gesco/getx_app/home_page/home_page.dart';
 import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/ui/app_header.dart';
+import 'package:gesco/ui/application_page.dart';
 import 'package:gesco/ui/common_styles.dart';
 import 'package:get/get.dart';
 
@@ -46,7 +47,7 @@ class DetailedBuildPage extends StatelessWidget {
                 children: <Widget>[
                   InkWell(
                     onTap: () {
-                      Get.to(HomePage());
+                      Get.to(ApplicationPage());
                     },
                     child: AppHeader(isMainPage: false),
                   ),

@@ -21,4 +21,11 @@ class CategoryRepository extends Disposable {
       .map((query) => query.docs
           .map<Product>((document) => (Product.fromMap(document)))
           .toList());
+
+  Future<Product> getProduct(String category, String productId) async =>
+      Product.fromMap(await _collection
+          .doc(category)
+          .collection('products')
+          .doc(productId)
+          .get());
 }
