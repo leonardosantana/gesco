@@ -14,6 +14,7 @@ class NewBuildController extends GetxController {
   Rx<GlobalKey<FormState>> formKey = GlobalKey<FormState>().obs;
 
   RxBool isSwitch = false.obs;
+  RxBool loading = false.obs;
   Rx<TextEditingController> engineerController = TextEditingController().obs;
   Rx<TextEditingController> phaseController = TextEditingController().obs;
   Rx<TextEditingController> builderController = TextEditingController().obs;
@@ -56,11 +57,14 @@ class NewBuildController extends GetxController {
       build.buildImage =
           'https://www.conjur.com.br/img/b/pedreiro-ajudante-obra.png';
 
+      loading.value = true;
+
       BuildRepository().add(build).then((value) {
         build.documentId = value;
         HomePageController homePageController = Get.find();
         homePageController.builds.add(build);
 
+        loading.value = false;
         Get.snackbar('Obra adicionada', 'obra ${build.name} salva com sucesso');
         Get.to(ApplicationPage());
       }, onError: (e) => print(e));

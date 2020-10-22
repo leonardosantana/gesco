@@ -14,6 +14,7 @@ import 'package:get/get.dart';
 class NewOrderController extends GetxController {
   Build _build;
 
+  RxBool loading = false.obs;
   List<Item> items = List<Item>().obs;
   List<Category> categories = List<Category>().obs;
   List<Product> products = List<Product>().obs;
@@ -21,7 +22,7 @@ class NewOrderController extends GetxController {
   Rx<Category> category = Category().obs;
   Rx<TextEditingController> searchController = TextEditingController().obs;
   Rx<TextEditingController> quantityController = TextEditingController().obs;
-  var notFoundProduct = 'Nenhum Produto encontrado';
+  var notFoundProduct = Product(name: 'Nenhum Produto encontrado');
   var emptyCategory = 'Selecione uma Categoria';
   var emptyProduct = Product(name: 'Selecione um Produto');
   Rx<Product> product = Product().obs;
@@ -33,11 +34,14 @@ class NewOrderController extends GetxController {
 
   Rx<Order> order = Order().obs;
 
-  NewOrderController(this._build) {
+  NewOrderController(this._build, {String categoryId}) {
     order.value = newOrder();
     product.value = emptyProduct;
-    categories.add(Category(name: emptyCategory));
-    initializeCategories().then((value) => categories.addAll(value));
+    loadCategories().then((value) {
+      if (categoryId != null) {
+        changeCategory(categoryId);
+      }
+    });
   }
 
   Order newOrder() {
@@ -65,6 +69,7 @@ class NewOrderController extends GetxController {
   }
 
   saveOrder() {
+    loading.value = true;
     print('saving order in ${_build.documentId}');
     order.value.quantity = items.length;
     order.value.category = category.value.documentId;
@@ -82,15 +87,29 @@ class NewOrderController extends GetxController {
         buildController.orders.add(order.value);
         buildController.build = _build;
 
+        loading.value = false;
+        Get.reset();
         Get.close(1);
         Get.to(ApplicationPage());
-        Get.reset();
       });
     });
   }
 
   Future<List<Category>> initializeCategories() async =>
       await _categoryRepository.categories.first;
+
+  changeCategory(String cateogryId) async {
+    products.clear();
+    products.add(emptyProduct);
+    filteredProducts.clear();
+    searchController.value.clear();
+
+    category.value =
+        categories.firstWhere((element) => element.documentId == cateogryId);
+    products.addAll(
+        await _categoryRepository.products(category.value.documentId).first);
+    filteredProducts.addAll(products);
+  }
 
   changeSelectedCategory(String value) async {
     if (items.length > 0) {
@@ -119,16 +138,25 @@ class NewOrderController extends GetxController {
   }
 
   void resetProduct() {
+    filteredProducts.clear();
+    filteredProducts.addAll(products);
+    searchController.value.text = '';
     quantityController.value.text = '';
     product.value = emptyProduct;
   }
 
   getFilteredProducts(String value) async {
     filteredProducts.clear();
-    filteredProducts
+
+    var filterResult = List<Product>();
+
+    filterResult
         .addAll(products.where((element) => element.name.contains(value)));
-    if (filteredProducts.length == 0)
-      filteredProducts.add(Product(name: notFoundProduct));
+
+    filterResult.length == 0
+        ? filteredProducts.add(notFoundProduct)
+        : filteredProducts.addAll(filterResult);
+    product.value = filteredProducts[0];
   }
 
   selectProduct(String value) {
@@ -139,5 +167,33 @@ class NewOrderController extends GetxController {
 
   removeItem(int index) {
     items.removeAt(index);
+  }
+
+  backPressed() {
+    return Get.dialog(
+      Dialog(
+        child: Column(
+          children: [
+            Text('Deseja continuar?'),
+            Text('Voltando perdera os dados deste pedido.'),
+            GestureDetector(
+              onTap: () => null,
+              child: Text("Não"),
+            ),
+            SizedBox(height: 16),
+            new GestureDetector(
+              onTap: () => Get.back(),
+              child: Text("Sim"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> loadCategories() async {
+    categories.clear();
+    categories.add(Category(name: emptyCategory));
+    categories.addAll(await initializeCategories());
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gesco/getx_app/build/new_build/new_build_controller.dart';
 import 'package:gesco/getx_app/home_page/home_page.dart';
 import 'package:gesco/ui/app_header.dart';
+import 'package:gesco/ui/application_page.dart';
 import 'package:gesco/utils/common_validator.dart';
 import 'package:get/get.dart';
 
@@ -25,7 +26,7 @@ class NewBuildPage extends StatelessWidget {
                 children: <Widget>[
                   InkWell(
                     onTap: () {
-                      Get.to(HomePage());
+                      Get.to(ApplicationPage());
                     },
                     child: AppHeader(isMainPage: false),
                   ),
@@ -56,18 +57,25 @@ class NewBuildPage extends StatelessWidget {
     );
   }
 
-  FlatButton buildFlatButton() {
-    return FlatButton(
-      color: Colors.blue,
-      textColor: Colors.white,
-      padding: EdgeInsets.all(10.0),
-      splashColor: Colors.blueAccent,
-      onPressed: () => controller.saveBuild(),
-      child: Text(
-        'Salvar',
-        style: TextStyle(fontSize: 20.0),
-      ),
-    );
+  Widget buildFlatButton() {
+    return Obx(() => controller.loading == true
+        ? Center(child: Row(
+          children: [
+            CircularProgressIndicator(),
+            Text('Salvando')
+          ],
+        ))
+        : FlatButton(
+            color: Colors.blue,
+            textColor: Colors.white,
+            padding: EdgeInsets.all(10.0),
+            splashColor: Colors.blueAccent,
+            onPressed: () => controller.saveBuild(),
+            child: Text(
+              'Salvar',
+              style: TextStyle(fontSize: 20.0),
+            ),
+          ));
   }
 
   SizedBox buildSizedBox() {
@@ -104,10 +112,12 @@ class NewBuildPage extends StatelessWidget {
   Widget phaseField() {
     return Obx(() => DropdownButtonFormField<String>(
         value: controller.phaseController.value.text,
-        items: controller.items.map((e) => DropdownMenuItem(
-          child: Text(e),
-          value: e,
-        )).toList(),
+        items: controller.items
+            .map((e) => DropdownMenuItem(
+                  child: Text(e),
+                  value: e,
+                ))
+            .toList(),
         decoration: const InputDecoration(
           icon: Icon(Icons.timeline),
           hintText: 'Insira em que etapa a obra esta',

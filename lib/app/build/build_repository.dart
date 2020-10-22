@@ -15,7 +15,7 @@ class BuildRepository extends Disposable {
   String _buildId;
 
   CollectionReference _collection =
-      FirebaseFirestore.instance.collection(buildCollerctionPath);
+  FirebaseFirestore.instance.collection(buildCollerctionPath);
 
   Future<String> add(Build build) {
     return _collection
@@ -50,7 +50,6 @@ class BuildRepository extends Disposable {
         .collection(ordersCollectionPath)
         .doc(order.documentId)
         .update(order.toMap());
-
   }
 
   Future<String> addOrder(String documentId, Order order) {
@@ -76,24 +75,25 @@ class BuildRepository extends Disposable {
 
   void delete(String documentId) => _collection.doc(documentId).delete();
 
-  Stream<List<Build>> get builds => _collection
-        .snapshots()
-        .map((query) => query.docs.map<Build>((document) {
-      Build build = Build.fromMap(document);
-      getOrders(document.id).listen((event) => build.orders = event);
-      return build;
-    }).toList());
+  Stream<List<Build>> get builds =>
+      _collection.snapshots().map((query) =>
+          query.docs.map<Build>((document) {
+            Build build = Build.fromMap(document);
+            getOrders(document.id).listen((event) => build.orders = event);
+            return build;
+          }).toList());
 
   Stream<List<Build>> get buildsOwner {
     FirebaseFirestore.instance.clearPersistence();
     return _collection
         .where('owner', isEqualTo: _user.email)
         .snapshots()
-        .map((query) => query.docs.map<Build>((document) {
-              Build build = Build.fromMap(document);
-              getOrders(document.id).listen((event) => build.orders = event);
-              return build;
-            }).toList());
+        .map((query) =>
+        query.docs.map<Build>((document) {
+          Build build = Build.fromMap(document);
+          getOrders(document.id).listen((event) => build.orders = event);
+          return build;
+        }).toList());
   }
 
   Stream<List<Build>> get buildsEngineer {
@@ -101,11 +101,12 @@ class BuildRepository extends Disposable {
     return _collection
         .where('engineer', isEqualTo: _user.email)
         .snapshots()
-        .map((query) => query.docs.map<Build>((document) {
-              Build build = Build.fromMap(document);
-              getOrders(document.id).listen((event) => build.orders = event);
-              return build;
-            }).toList());
+        .map((query) =>
+        query.docs.map<Build>((document) {
+          Build build = Build.fromMap(document);
+          getOrders(document.id).listen((event) => build.orders = event);
+          return build;
+        }).toList());
   }
 
   Stream<List<Build>> get buildsBuilder {
@@ -113,11 +114,12 @@ class BuildRepository extends Disposable {
     return _collection
         .where('builder', isEqualTo: _user.email)
         .snapshots()
-        .map((query) => query.docs.map<Build>((document) {
-              Build build = Build.fromMap(document);
-              getOrders(document.id).listen((event) => build.orders = event);
-              return build;
-            }).toList());
+        .map((query) =>
+        query.docs.map<Build>((document) {
+          Build build = Build.fromMap(document);
+          getOrders(document.id).listen((event) => build.orders = event);
+          return build;
+        }).toList());
   }
 
   @override
@@ -129,34 +131,42 @@ class BuildRepository extends Disposable {
         .doc(id)
         .collection(ordersCollectionPath)
         .snapshots()
-        .map((query) => query.docs.map<Order>((document) {
-              Order order = Order.fromMap(document);
-              order.path =
-                  '/${buildCollerctionPath}/${id}/${ordersCollectionPath}/${document.id}';
-              getItems(document)
-                  .listen((eventResult) => order.items = eventResult);
-              return order;
-            }).toList());
+        .map((query) =>
+        query.docs.map<Order>((document) {
+          Order order = Order.fromMap(document);
+          order.path =
+          '/${buildCollerctionPath}/${id}/${ordersCollectionPath}/${document
+              .id}';
+          getItems(document)
+              .listen((eventResult) => order.items = eventResult);
+          return order;
+        }).toList());
   }
 
-  Stream<List<Item>> getItems(QueryDocumentSnapshot document) => _collection
-      .doc(_buildId)
-      .collection(ordersCollectionPath)
-      .doc(document.id)
-      .collection(itemsCollectionPath)
-      .snapshots()
-      .map((event) => event.docs.map<Item>((e) => Item.fromMap(e)).toList());
+  Stream<List<Item>> getItems(QueryDocumentSnapshot document) =>
+      _collection
+          .doc(_buildId)
+          .collection(ordersCollectionPath)
+          .doc(document.id)
+          .collection(itemsCollectionPath)
+          .snapshots()
+          .map((event) =>
+          event.docs.map<Item>((e) => Item.fromMap(e)).toList());
 
   Stream<List<Item>> getItemsbyOrderPath(String itemsPath) {
-    FirebaseFirestore.instance
-        .collection(itemsPath)
+    List<String> path = itemsPath.split('/');
+    return _collection
+        .doc(path[2])
+        .collection(ordersCollectionPath)
+        .doc(path[4])
+        .collection(itemsCollectionPath)
         .snapshots()
         .map((event) => event.docs.map<Item>((e) => Item.fromMap(e)).toList());
   }
 
   Future<Order> getOrder(String documentPath) async {
     DocumentSnapshot document =
-        await FirebaseFirestore.instance.doc(documentPath).get();
+    await FirebaseFirestore.instance.doc(documentPath).get();
 
     return Order.fromMap(document);
   }
@@ -165,7 +175,7 @@ class BuildRepository extends Disposable {
     String documentPath = orderPath.substring(0, orderPath.indexOf('/orders'));
 
     DocumentSnapshot document =
-        await FirebaseFirestore.instance.doc(documentPath).get();
+    await FirebaseFirestore.instance.doc(documentPath).get();
 
     return Build.fromMap(document);
   }
@@ -177,4 +187,21 @@ class BuildRepository extends Disposable {
           .snapshots()
           .map((event) => event.docs.map<Item>((e) => Item.fromMap(e)).toList())
           .first;
+
+  Future<void> updateItem(String buildId, String orderId, String itemId,
+      Item item) {
+    _collection
+        .doc(buildId)
+        .collection(ordersCollectionPath)
+        .doc(orderId)
+        .collection(itemsCollectionPath)
+        .doc(itemId)
+        .update(item.toMap());
+  }
+
+  Future<Build> getBuild(String buildId) async {
+    DocumentSnapshot document = await _collection
+        .doc(buildId).get();
+    return Build.fromMap(document);
+  }
 }

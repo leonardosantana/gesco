@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gesco/getx_app/home_page/home_page.dart';
 import 'package:gesco/getx_app/order/detailed_order/detailed_order_controller.dart';
 import 'package:gesco/ui/app_header.dart';
+import 'package:gesco/ui/application_page.dart';
 import 'package:gesco/ui/common_styles.dart';
 import 'package:get/get.dart';
 
@@ -39,7 +39,7 @@ class DetailedOrderPage extends StatelessWidget {
                     onTap: () {
                       Get.close(1);
                       Get.reset();
-                      Get.to(HomePage());
+                      Get.to(ApplicationPage());
                     },
                     child: AppHeader(isMainPage: false),
                   ),
@@ -116,7 +116,9 @@ class DetailedOrderPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 Text('Item'),
-                                Text('Quantidade'),
+                                Obx(() => controller.order.value.status == null
+                                    ? Text('')
+                                    : Text(controller.getTextFromStatus())),
                               ],
                             ),
                             buildItems(),
@@ -165,13 +167,13 @@ class DetailedOrderPage extends StatelessWidget {
 
   Widget buildProductName(int item) {
     return Obx(() {
-      return controller.products.length == 0 ? CircularProgressIndicator() :
-       Text(controller.getProduct(controller.items[item].productId).name);
+      return controller.products.length == 0
+          ? CircularProgressIndicator()
+          : Text(controller.getProduct(controller.items[item].productId).name);
     });
   }
 
   Widget itemTile(int index) {
-
     return Container(
       padding: EdgeInsets.all(5.0),
       child: Row(
@@ -179,12 +181,12 @@ class DetailedOrderPage extends StatelessWidget {
         children: <Widget>[
           Column(
             children: <Widget>[
-            buildProductName(index),
+              buildProductName(index),
             ],
           ),
           Column(children: <Widget>[
             Text(
-              controller.items[index].quantity.toString(),
+              controller.getTextQuantityFromStatus(controller.items[index]),
               style: TextStyle(
                 color: controller.getColorFromStatus(controller.items[index],
                     OrderStatusEnum.values[controller.order.value.status]),
