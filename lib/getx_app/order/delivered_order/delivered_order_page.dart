@@ -1,11 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:gesco/getx_app/home_page/home_page.dart';
+import 'package:gesco/getx_app/home/application_page.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/ui/app_header.dart';
-import 'package:gesco/ui/application_page.dart';
 import 'package:gesco/ui/common_styles.dart';
 import 'package:get/get.dart';
 
@@ -207,7 +206,7 @@ class DeliveredOrderPage extends StatelessWidget {
           controller.deliveredController.value.text = item.quantity.toString();
           if (direction == DismissDirection.startToEnd) {
             Get.dialog(AlertDialog(
-              title: Text("Setting String"),
+              title: Text("Quantidade entregue"),
               content: TextFormField(
                 controller: controller.deliveredController.value,
               ),

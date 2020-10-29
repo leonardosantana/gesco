@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_masked_text/flutter_masked_text.dart';
 import 'package:gesco/app/build/build_repository.dart';
 import 'package:gesco/app/product/product_repository.dart';
 import 'package:gesco/getx_app/build/build_model.dart';
+import 'package:gesco/getx_app/home/application_page.dart';
 import 'package:gesco/getx_app/order/delivered_order/delivered_order_page.dart';
 import 'package:gesco/getx_app/order/new_order/new_order_page.dart';
 import 'package:gesco/getx_app/order/order_status_enum.dart';
@@ -10,7 +12,6 @@ import 'package:gesco/models/category.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/models/product.dart';
-import 'package:gesco/ui/application_page.dart';
 import 'package:get/get.dart';
 
 class DetailedOrderController extends GetxController {
@@ -20,6 +21,7 @@ class DetailedOrderController extends GetxController {
   List<Item> items = List<Item>().obs;
   List<Product> products = List<Product>().obs;
   String user = FirebaseAuth.instance.currentUser.email;
+  Rx<MoneyMaskedTextController> custOrderController = MoneyMaskedTextController(leftSymbol: "R\$:",decimalSeparator: ',', thousandSeparator: '.').obs;
 
   Rx<Category> category = Category().obs;
 
@@ -280,7 +282,25 @@ class DetailedOrderController extends GetxController {
       child: FlatButton(
         onPressed: () {
           order.status = OrderStatusEnum.AGUARDANDO_ENTREGA.index;
-          updateOrderAndGoToHome(order);
+          {
+            Get.dialog(AlertDialog(
+              title: Text("Qual o valor da compra"),
+              content: TextFormField(
+                controller: custOrderController.value,
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Get.back();
+                    order.cust = custOrderController.value.numberValue;
+                    updateOrderAndGoToHome(order);
+                  },
+                )
+              ],
+            ));
+          }
+
         },
         child: Text(
           'Compra efetuada',
@@ -300,14 +320,14 @@ class DetailedOrderController extends GetxController {
     List<Item> absentItems = items
         .where((element) => element.delivered != element.quantity)
         .map((e) {
-          e.quantity = e.quantity - e.delivered;
-          return e;
-        })
-        .toList();
+      e.quantity = e.quantity - e.delivered;
+      return e;
+    }).toList();
 
     order.value.status = OrderStatusEnum.CONCLUIDO.index;
     BuildRepository().updateOrderStatus(buildId, order.value);
-
-    Get.to(NewOrderPage(buildObj: build, items: absentItems, categoryId: order.value.category));
+    Get.close(1);
+    Get.to(NewOrderPage(
+        buildObj: build, items: absentItems, categoryId: order.value.category));
   }
 }

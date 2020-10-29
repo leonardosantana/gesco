@@ -1,14 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:gesco/app/build/new_build/new_build_page.dart';
-import 'package:gesco/controller/order_controller.dart';
 import 'package:gesco/getx_app/build/detailed_build/detailed_build_controller.dart';
-import 'package:gesco/getx_app/home_page/home_page.dart';
+import 'package:gesco/getx_app/home/application_page.dart';
 import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/ui/app_header.dart';
-import 'package:gesco/ui/application_page.dart';
 import 'package:gesco/ui/common_styles.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import '../build_model.dart';
 
@@ -19,9 +20,11 @@ class DetailedBuildPage extends StatelessWidget {
 
   DetailedBuildController controller;
 
+
   DetailedBuildPage({this.buildObj}) {
     if (buildObj != null) {
-      controller = Get.put(DetailedBuildController(build: buildObj), tag: buildObj.documentId);
+      controller = Get.put(DetailedBuildController(build: buildObj),
+          tag: buildObj.documentId);
     }
   }
 
@@ -131,9 +134,23 @@ class DetailedBuildPage extends StatelessWidget {
                   Container(
                     width: 100.0,
                     height: 100.0,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(buildObj.buildImage),
-                    ),
+                    child: Stack(children: <Widget>[
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 20,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (() => Get.dialog(showChooseImageDialog())),
+                        child: Container(
+                          width: 95.0,
+                          height: 95.0,
+                          child: getImage(),
+                        ),
+                      ),
+                    ]),
                   ),
                   SizedBox(
                     width: 10.0,
@@ -160,11 +177,21 @@ class DetailedBuildPage extends StatelessWidget {
     );
   }
 
+  Widget getImage() {
+    return Obx((){
+
+      var backgroundImage = controller.imagePath.value == ''? NetworkImage(buildObj.buildImage) : NetworkImage(controller.imagePath.value);
+      return CircleAvatar(
+          backgroundImage: backgroundImage
+      );
+    });
+
+  }
+
   Widget buildOrderTile(Order order) {
     return InkWell(
       onTap: () {
         controller.goToDetailedOrder(order);
-
       },
       child: Card(
         elevation: 5.0,
@@ -202,7 +229,9 @@ class DetailedBuildPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      order.orderNumber!= null? 'ordem nº${order.orderNumber}':'nova ordem',
+                      order.orderNumber != null
+                          ? '#${order.orderNumber}'
+                          : 'nova ordem',
                       style: TextStyle(
                           fontSize: 20,
                           color: Colors.black,
@@ -210,13 +239,15 @@ class DetailedBuildPage extends StatelessWidget {
                     ),
                     Container(
                         decoration: BoxDecoration(
-                          color: OrderStatus.getColorFromStatus(OrderStatusEnum.values[order.status]),
+                          color: OrderStatus.getColorFromStatus(
+                              OrderStatusEnum.values[order.status]),
                           borderRadius: BorderRadius.circular(15),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 2.0, horizontal: 5),
-                          child: Text(OrderStatus.getStatusFromEnum(OrderStatusEnum.values[order.status])),
+                          child: Text(OrderStatus.getStatusFromEnum(
+                              OrderStatusEnum.values[order.status])),
                         )),
                   ],
                 ),
@@ -229,9 +260,46 @@ class DetailedBuildPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 Text('Itens: ${order.quantity}'),
+                Text('${DateFormat('d/M/y').format(DateTime.fromMillisecondsSinceEpoch(order.date.millisecondsSinceEpoch))}')
               ],
             ),
           )
         ]);
+  }
+
+  Widget showChooseImageDialog() {
+    return AlertDialog(
+        title: Text("De onde quer pegar a imagem?"),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              GestureDetector(
+                child: Text("Galeria"),
+                onTap: () {
+                  _openGallery();
+                },
+              ),
+              Padding(padding: EdgeInsets.all(8.0)),
+              GestureDetector(
+                child: Text("Camera"),
+                onTap: () {
+                  _openCamera();
+                },
+              )
+            ],
+          ),
+        ));
+  }
+
+  void _openGallery() async {
+    var image = await ImagePicker().getImage(source: ImageSource.gallery);
+    controller.updateImage(image);
+    Get.back();
+  }
+
+  void _openCamera() async {
+    var image = await ImagePicker().getImage(source: ImageSource.camera);
+    controller.updateImage(image);
+    Get.back();
   }
 }

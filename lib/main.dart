@@ -5,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/getx_app/routes/pages.dart';
 import 'package:gesco/ui/app_header.dart';
-import 'package:gesco/ui/application_page.dart';
 import 'package:gesco/ui/login_page.dart';
-import 'package:gesco/ui/my_home_page.dart';
 import 'package:get/get.dart';
+
+import 'getx_app/home/application_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,7 +51,7 @@ class Gesco extends StatelessWidget {
         width: 30,
         height: 30,
         child: Container(
-          child: CupertinoActivityIndicator(),
+          child: CircularProgressIndicator(),
           color: Colors.blue,
         ),
       ),

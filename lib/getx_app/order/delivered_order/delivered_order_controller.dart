@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gesco/app/build/build_repository.dart';
-import 'package:gesco/app/product/category_repository.dart';
 import 'package:gesco/app/product/product_repository.dart';
+import 'package:gesco/getx_app/home/application_page.dart';
 import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/order.dart';
-import 'package:gesco/models/product.dart';
-import 'package:gesco/ui/application_page.dart';
 import 'package:get/get.dart';
 
 class DeliveredOrderController extends GetxController {

@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/widgets/form.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:gesco/app/build/build_repository.dart';
-import 'package:gesco/getx_app/home_page/home_controller.dart';
-import 'package:gesco/ui/application_page.dart';
+import 'package:gesco/getx_app/home/application_page.dart';
+import 'package:gesco/getx_app/home/home_controller.dart';
 import 'package:gesco/utils/common_validator.dart';
 import 'package:get/get.dart';
 
@@ -62,7 +62,7 @@ class NewBuildController extends GetxController {
       BuildRepository().add(build).then((value) {
         build.documentId = value;
         HomePageController homePageController = Get.find();
-        homePageController.builds.add(build);
+        homePageController.builds.add(build.obs);
 
         loading.value = false;
         Get.snackbar('Obra adicionada', 'obra ${build.name} salva com sucesso');

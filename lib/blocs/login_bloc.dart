@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gesco/ui/application_page.dart';
+import 'package:gesco/getx_app/home/application_page.dart';
 import 'package:gesco/ui/my_home_page.dart';
 
 class LoginBloc {

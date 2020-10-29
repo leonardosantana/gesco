@@ -4,7 +4,6 @@ import 'file:///C:/Users/Leonardo%20Santana/IdeaProjects/gesco/lib/getx_app/buil
 import 'package:gesco/app/build/new_build/new_build_page.dart';
 import 'package:gesco/app/order/order_bloc.dart';
 import 'package:gesco/ui/common_styles.dart';
-import 'package:gesco/ui/menu_page.dart';
 
 import '../../ui/detailed_build.dart';
 import 'build_bloc.dart';

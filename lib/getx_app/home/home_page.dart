@@ -10,6 +10,7 @@ import 'package:gesco/models/order.dart';
 import 'package:gesco/ui/app_header.dart';
 import 'package:gesco/ui/common_styles.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import 'home_controller.dart';
 
@@ -159,19 +160,19 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  buildTile({Build build}) {
+  buildTile({Rx<Build> build}) {
     return Card(
       //color: Colors.white,
       elevation: 5.0,
       child: Container(
         width: 140.0,
-        color: build == null || build.color == null
+        color: build == null || build.value.color == null
             ? Colors.blueAccent.withOpacity(0.4)
-            : build.color.withOpacity(0.5),
+            : build.value.color.withOpacity(0.5),
         child: InkWell(
           onTap: () {
             build != null ?
-              Get.to(DetailedBuildPage(buildObj: build,)):
+              Get.to(DetailedBuildPage(buildObj: build.value,)):
               Get.to(NewBuildPage());
           },
           child: build == null ? buildEmptyTile() : buildDetailed(build: build),
@@ -213,7 +214,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Column buildDetailed({Build build}) {
+  Column buildDetailed({Rx<Build> build}) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -223,8 +224,10 @@ class HomePage extends StatelessWidget {
           child: Stack(
             children: [
               Image(
-                fit: BoxFit.fill,
-                image: NetworkImage(build.buildImage),
+                height: 120 ,
+                width: 140,
+                fit: BoxFit.cover,
+                image: NetworkImage(build.value.buildImage),
               ),
               Row(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -237,7 +240,7 @@ class HomePage extends StatelessWidget {
                       padding: EdgeInsets.all(5),
                       margin: EdgeInsets.only(top: 5, right: 5),
                       child:
-                    Text(controller.getUserBuildRole(build),),
+                    Text(controller.getUserBuildRole(build.value),),
                     )
                   ],
                 ),
@@ -254,20 +257,20 @@ class HomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    build.name,
+                    build.value.name,
                     style: CommonStyles.TileTextStyle(size: 16.0),
                   ),
                 ],
               ),
+              Obx(()=> Text(
+                build.value.cust.toString(),
+                style: CommonStyles.TileTextStyle(),
+              )),
               Text(
-                build.cust.toString(),
+                build.value.progress.toString(),
                 style: CommonStyles.TileTextStyle(),
               ),
-              Text(
-                build.progress.toString(),
-                style: CommonStyles.TileTextStyle(),
-              ),
-              Text(build.phase == null ? '' : build.phase,
+              Text(build.value.phase == null ? '' : build.value.phase,
                   style: CommonStyles.TileTextStyle()),
             ],
           ),
@@ -303,7 +306,7 @@ class HomePage extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             ticket.orderNumber != null
-                                ? 'obra ${ticket.buildName} ordem nº${ticket.orderNumber}'
+                                ? '${ticket.buildName} #${ticket.orderNumber}'
                                 : 'nova ordem',
                             style: TextStyle(
                                 fontSize: 20,
@@ -332,6 +335,7 @@ class HomePage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       Text('Itens: ${ticket.quantity}'),
+                      Text('${DateFormat('d/M/y').format(DateTime.fromMillisecondsSinceEpoch(ticket.date.millisecondsSinceEpoch))}')
                     ],
                   ),
                 )

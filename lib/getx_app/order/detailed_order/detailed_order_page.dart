@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gesco/getx_app/home/application_page.dart';
 import 'package:gesco/getx_app/order/detailed_order/detailed_order_controller.dart';
 import 'package:gesco/ui/app_header.dart';
-import 'package:gesco/ui/application_page.dart';
 import 'package:gesco/ui/common_styles.dart';
 import 'package:get/get.dart';
 

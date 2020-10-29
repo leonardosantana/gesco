@@ -1,14 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gesco/app/build/build_repository.dart';
 import 'package:gesco/app/product/category_repository.dart';
 import 'package:gesco/getx_app/build/build_model.dart';
 import 'package:gesco/getx_app/build/detailed_build/detailed_build_controller.dart';
+import 'package:gesco/getx_app/home/application_page.dart';
 import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/category.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/order.dart';
 import 'package:gesco/models/product.dart';
-import 'package:gesco/ui/application_page.dart';
 import 'package:get/get.dart';
 
 class NewOrderController extends GetxController {
@@ -52,6 +53,7 @@ class NewOrderController extends GetxController {
         quantity: 0,
         status: OrderStatusEnum.CRIANDO.index,
         items: items,
+        date: Timestamp.now(),
         orderNumber: _build.ordersNumber == null ? 1 : _build.ordersNumber + 1);
   }
 

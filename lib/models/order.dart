@@ -17,6 +17,7 @@ class Order extends BaseModel {
   bool modified;
   int orderNumber;
   List<Item> items;
+  Timestamp date;
 
   Order(
       {@required this.color,
@@ -25,6 +26,7 @@ class Order extends BaseModel {
       @required this.quantity,
       @required this.cust,
       @required this.items,
+      @required this.date,
       this.orderNumber}) {
     this.modified = false;
   }
@@ -39,6 +41,7 @@ class Order extends BaseModel {
     map['cust'] = this.cust;
     map['modified'] = this.modified;
     map['orderNumber'] = this.orderNumber;
+    map['date'] = this.date;
 
     return map;
   }
@@ -59,5 +62,6 @@ class Order extends BaseModel {
     this.modified = dataMap["modified"];
     this.items = dataMap["items"];
     this.orderNumber = dataMap["orderNumber"];
+    this.date = dataMap["date"];
   }
 }

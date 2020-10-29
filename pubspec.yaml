@@ -19,10 +19,16 @@ environment:
 dependencies:
   rxdart: ^0.24.1
   bloc_pattern: ^2.5.1
+  camera: ^0.5.8+11
+  path_provider: ^1.6.21
+  path: ^1.7.0
+  image_picker: ^0.6.7+12
+  firebase_storage: ^4.0.1
   get: ^3.12.1
   intl: ^0.16.1
   dropdown_search: ^0.4.4
   cloud_firestore: ^0.14.0+2
+  flutter_masked_text: ^0.8.0
   flutter:
     sdk: flutter
 

@@ -2,14 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gesco/getx_app/build/build_model.dart';
-import 'package:gesco/getx_app/home_page/home_page.dart';
+import 'package:gesco/getx_app/home/application_page.dart';
 import 'package:gesco/getx_app/order/new_order/new_order_controller.dart';
 import 'package:gesco/getx_app/order/order_status_enum.dart';
 import 'package:gesco/models/category.dart';
 import 'package:gesco/models/item.dart';
 import 'package:gesco/models/product.dart';
 import 'package:gesco/ui/app_header.dart';
-import 'package:gesco/ui/application_page.dart';
 import 'package:gesco/utils/common_validator.dart';
 import 'package:get/get.dart';
 

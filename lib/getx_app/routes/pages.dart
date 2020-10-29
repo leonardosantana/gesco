@@ -3,10 +3,10 @@
 import 'package:gesco/app/order/new_order/new_order_page.dart';
 import 'package:gesco/getx_app/build/detailed_build/detailed_build_page.dart';
 import 'package:gesco/getx_app/build/new_build/new_build_page.dart';
-import 'package:gesco/getx_app/home_page/home_page.dart';
+import 'package:gesco/getx_app/home/application_page.dart';
+import 'package:gesco/getx_app/home/home_page.dart';
 import 'package:gesco/getx_app/order/detailed_order/detailed_order_page.dart';
 import 'package:gesco/getx_app/routes/routes.dart';
-import 'package:gesco/ui/application_page.dart';
 import 'package:get/get.dart';
 
 class Pages{

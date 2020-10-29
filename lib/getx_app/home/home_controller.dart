@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import '../build/build_model.dart';
 
 class HomePageController extends GetxController {
-  List<Build> builds = List<Build>().obs;
+  List<Rx<Build>> builds = List<Rx<Build>>().obs;
   List<Order> orders = List<Order>().obs;
   RxBool hideMenu = true.obs;
 
@@ -18,20 +18,30 @@ class HomePageController extends GetxController {
     var user = FirebaseAuth.instance.currentUser.email;
 
     List<Build> allBuilds = List();
+    List<Build> filteredBuilds = List();
 
     allBuilds.addAll(await repository.builds.first);
 
-    builds.addAll(allBuilds.where((element) =>
+    filteredBuilds.addAll(allBuilds.where((element) =>
         element.builder == user ||
         element.owner == user ||
         element.engineer == user));
 
-    builds.forEach((element) async {
-      var iterableOrders = await repository.getOrders(element.documentId).first;
-      iterableOrders.forEach((order) {
-        order.buildName = element.name;
+    loadOrders(filteredBuilds, repository);
+  }
+
+  loadOrders(List<Build> filteredBuilds, BuildRepository repository) {
+    filteredBuilds.forEach((element)  {
+      var iterableOrders = repository.getOrders(element.documentId).first;
+      iterableOrders.then((value) {
+        value.forEach((order) {
+          order.buildName = element.name;
+        });
+        element.cust = value.map((a) => a.cust).reduce((a, b) => a + b);
+        builds.add(element.obs);
+        orders.addAll(value);
+        orders.sort((a, b) => -a.date.compareTo(b.date));
       });
-      orders.addAll(iterableOrders);
     });
   }
 
